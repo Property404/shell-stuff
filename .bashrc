@@ -1,17 +1,21 @@
-set -o vi
-shopt -s expand_aliases
+# .bashrc
 
-# Aliases becuase of lack of i key
-alias vm="vim"
-alias gedt="gedit"
-alias gt="git"
-alias commt="commit"
-alias :q="exit"
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
 
-# Debian-based only
-alias supdate="sudo apt-get update"
-alias supgrade="sudo apt-get dist-upgrade"
-alias sgetpkg="sudo apt-get install"
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
 
-# Fun stuff
-fortune -s
+# User specific aliases and functions
+alias vim='/usr/bin/nvim'
+alias ddg='elinks https://duckduckgo.com'
+alias oscbook='elinks http://pages.cs.wisc.edu/~remzi/OSTEP/'
+export EDITOR='nvim'
+export VISUAL='nvim'
+export PAGER='less'
+export PS1='\W \$ '
+
+
+alias rmswap='rm ~/.local/share/nvim/swap/*'
