@@ -1,10 +1,13 @@
 call plug#begin('~/.config/nvim/plugged')
-Plug 'Property404/vim-fetlang'
-" Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
-" Plug 'wellle/tmux-complete.vim'
+Plug 'fetlang/vim-fetlang'
+Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
+Plug 'wellle/tmux-complete.vim'
 Plug 'Property404/molokai'
+" Plug 'vim-airline/vim-airline'
+" Plug 'vim-airline/vim-airline-themes'
 " Plug 'Shougo/neco-syntax'
 call plug#end()
+
 
 " Color
 " let g:molokai_original = 1
@@ -25,4 +28,7 @@ endif
 " Short tabs
 set ts=4 sw=4
 
+set relativenumber
 set number
+set autowrite
+

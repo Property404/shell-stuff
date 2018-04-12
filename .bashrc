@@ -12,6 +12,8 @@ fi
 alias vim='/usr/bin/nvim'
 alias ddg='elinks https://duckduckgo.com'
 alias oscbook='elinks http://pages.cs.wisc.edu/~remzi/OSTEP/'
+alias mc='ranger'
+alias python='python3'
 export EDITOR='nvim'
 export VISUAL='nvim'
 export PAGER='less'
