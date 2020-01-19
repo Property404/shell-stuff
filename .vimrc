@@ -1,17 +1,7 @@
 " Plug plugins
 call plug#begin('~/.vim/plugged')
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
+Plug 'lifepillar/vim-mucomplete'
 call plug#end()
-
-" Deoplete settings
-let g:deoplete#enable_at_startup =1
-call deoplete#custom#option('auto_complete_delay', 100)
 
 " Line numbers
 set relativenumber
@@ -44,3 +34,9 @@ set splitbelow
 set wildignore=*.o,*.su,*.bak,*.pyc,*.elf,*.so
 set wildmenu
 set wildmode=longest:list,full
+
+" Lol
+command WQ wq
+command Wq wq
+command W w
+command Q q
