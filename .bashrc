@@ -9,15 +9,8 @@ fi
 # export SYSTEMD_PAGER=
 
 # User specific aliases and functions
-alias vim='/usr/bin/nvim'
-alias ddg='elinks https://duckduckgo.com'
-alias oscbook='elinks http://pages.cs.wisc.edu/~remzi/OSTEP/'
-alias mc='ranger'
-alias python='python3'
-alias rmswap='rm ~/.local/share/nvim/swap/*'
-
-export EDITOR='nvim'
-export VISUAL='nvim'
+export EDITOR='vim'
+export VISUAL='vim'
 export PAGER='less'
 export PATH="$PATH:/home/dagan/.cargo/bin"
 
