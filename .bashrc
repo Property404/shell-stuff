@@ -13,6 +13,9 @@ export EDITOR='vim'
 export VISUAL='vim'
 export PAGER='less'
 export PATH="$PATH:/home/dagan/.cargo/bin"
+alias vim="gvim -v" # Allow native copy in Vim on Fedora
+alias l="ls"
+
 
 # Make the prompt less annoying
 export PS1='\W \$ '
@@ -25,6 +28,8 @@ alias stop="echo no u stop"
 alias STOP="ECHO NO U STOP"
 alias to_lower_case='tr "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "abcdefghijklmnopqrstuvwxyz"'
 alias to_upper_case='tr "abcdefghijklmnopqrstuvwxyz" "ABCDEFGHIJKLMNOPQRSTUVWXYZ"'
+
+
 
 function command_not_found_handle
 {
