@@ -1,7 +1,11 @@
 " Plug plugins
 call plug#begin('~/.vim/plugged')
 Plug 'lifepillar/vim-mucomplete'
+Plug 'majutsushi/tagbar'
+Plug 'Property404/molokai-dmod'
 call plug#end()
+
+color molokai-dmod
 
 " Line numbers
 set relativenumber
@@ -12,6 +16,7 @@ set cindent
 set copyindent
 set ts=4 sw=4
 set nowrap
+set expandtab
 
 " reopening a file
 if has("autocmd")
@@ -21,9 +26,6 @@ endif
 
 " Tags
 set tags=./tags,tags;$HOME
-
-" Always use directory of file as current directory
-" set autochdir
 
 " Buffer/Window/Split behavior
 set hidden
@@ -36,7 +38,15 @@ set wildmenu
 set wildmode=longest:list,full
 
 " Lol
+command WQA wqa
+command WQa wqa
+command Wqa wqa
 command WQ wq
 command Wq wq
 command W w
 command Q q
+command Qa qa
+command QA qa
+
+" Disable EX mode
+:map Q <Nop>
