@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# "Universal" updater script
+# Updates distro packages, Snap, and Flatpak
+
+# Launch an array of actions in the background and wait for them
+do_tasks() {
+	declare -n methods="$1"
+	# Keep a list of flags to detect which job failed/passed
+	declare -a flags;
+
+	for method in "${methods[@]}"; do
+		echo Running "'$method'"
+		# Run job and raise flag on failure
+		flag_name="/tmp/task_err_flag_$((RANDOM))"
+		flags+=("$flag_name")
+		pee "$method || touch $flag_name"&
+	done
+
+	for method in "${methods[@]}"; do
+		wait
+	done
+
+	# Fail if any of our jobs failed
+	for flag in "${flags[@]}"; do
+		if [ -f "$flag" ];then
+			echo "Failed"
+			rm "$flag"
+			exit 1
+		fi
+	done
+}
+
+main() {
+    # Elevate self
+    if [ $EUID != 0 ]; then
+        sudo "$0" "$@"
+        exit $?
+    fi
+
+    local tasks=()
+
+    if chronic command -v dnf; then
+        tasks+=("dnf update --refresh -y")
+    fi
+
+    if chronic command -v apt-get; then
+        tasks+=("apt-get update -y && apt-get dist-upgrade -y")
+    fi
+
+    if chronic command -v flatpak; then
+        tasks+=("flatpak update -y")
+    fi
+
+    if chronic command -v snap; then
+        tasks+=("snap refresh")
+    fi
+
+	do_tasks tasks
+}
+
+main "$@"
