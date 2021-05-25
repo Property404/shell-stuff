@@ -1,8 +1,10 @@
 " Plug plugins
 call plug#begin('~/.vim/plugged')
 Plug 'lifepillar/vim-mucomplete'
-Plug 'majutsushi/tagbar'
 Plug 'Property404/molokai-dmod'
+" Plug 'preservim/tagbar'
+" Plug 'dhruvasagar/vim-table-mode'
+" Plug 'aliou/bats.vim'
 call plug#end()
 
 color molokai-dmod

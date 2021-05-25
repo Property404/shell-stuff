@@ -1,4 +1,0 @@
-nmcli dev wifi
-nmcli device wifi connect APNAME password "password_goes_here"
-
-setxkbmap -option keypad:pointerkeys

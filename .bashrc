@@ -1,55 +1,107 @@
-# .bashrc
+# 'Public' .bashrc
+# shellcheck shell=bash
+
+# Station-specific definitions(work/home/vm/etc)
+if [ -f "$HOME/.bashrc_private" ]; then
+    source "$HOME/.bashrc_private"
+fi
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
-	. /etc/bashrc
+	source /etc/bashrc
 fi
 
-# Uncomment the following line if you don't like systemctl's auto-paging feature:
-# export SYSTEMD_PAGER=
+# User specific environment
+# shellcheck disable=SC2076
+if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
+then
+    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+fi
+export PATH
 
-# User specific aliases and functions
+# Disable annoying flow control shit
+stty -ixon
+
+# Less annoying prompt
+export PS1='\W \$ '
+
 export EDITOR='vim'
 export VISUAL='vim'
 export PAGER='less'
-export PATH="$PATH:/home/dagan/.cargo/bin"
-alias vim="gvim -v" # Allow native copy in Vim on Fedora
-alias l="ls"
 
+# Habit picked up from Ubuntu
+alias l="ls --color=auto"
 
-# Make the prompt less annoying
-export PS1='\W \$ '
-#prompt() {
-#    PS1="$(powerline-rs --shell bash $?)"
-#}
-#PROMPT_COMMAND=prompt
+# Danger: SSH without checking key
+alias unsafe_ssh="ssh -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/null'"
+alias unsafe_scp="ssh -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/null'"
 
-alias stop="echo no u stop"
-alias STOP="ECHO NO U STOP"
-alias to_lower_case='tr "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "abcdefghijklmnopqrstuvwxyz"'
-alias to_upper_case='tr "abcdefghijklmnopqrstuvwxyz" "ABCDEFGHIJKLMNOPQRSTUVWXYZ"'
+alias update_all="sudo dnf update --refresh -y && sudo flatpak update -y"
 
+# Less dangerous `rm`
+alias rm='trash-put'
 
+# Lax aliases
+alias vim="lax gvim -v" # Allows clipboard copying on Fedora
+alias rg="lax rg"
+alias grep="lax grep --color=auto"
+alias ls="lax ls --color=auto"
 
-function command_not_found_handle
-{
-	LOWERCASE_NAME=$(echo $1 | to_lower_case)
-	UPPERCASE_NAME=$(echo $1 | to_upper_case)
+# Because --color=always is a mouthful
+alias less="less -r"
+alias cargo="cargo --color=always"
+alias cgrep="grep --color=always"
+alias crg="rg --color=always"
 
-	if [ "$1" == "$LOWERCASE_NAME" ]
-	then
-		echo "bash: $LOWERCASE_NAME: command not found" 
-		return 127
-	fi
+# Spelling mistakes
+alias sl="ls"
+alias gre="grep"
+alias grp="grep"
+alias kilall="killall"
 
-	if ! hash $LOWERCASE_NAME 2>/dev/null
-	then
-		echo "BASH: $UPPERCASE_NAME: COMMAND NOT FOUND" 
-		return 127
-	fi
+# A 'hex editor'
+function xvim() {
+    xxd "$@" | vipe | xxd -r | sponge "$@"
+}
 
-	LOWERCASE_COMMAND=$(echo "$@" | to_lower_case)
+# Copy code snippets, etc, stored in KVS (dagan-utils)
+function snip() {
+    kvs get "${@}" | wl-copy -n
+}
 
-	$LOWERCASE_COMMAND &> /tmp/blop
-	cat /tmp/blop  | to_upper_case
+# Very cool `cd` wrapper
+# `pd` allows going backwords like pushd/popd, but`fd` allows you to also go
+# forward in time
+# Additionally, it uses `lax` so you can teleport to child directories
+declare -a CD2_BACK_STACK=();
+declare -a CD2_FORWARD_STACK=();
+function cd() {
+    local args;
+    if ! args=$(lax -Dp -- "$@"); then 
+        return 1
+    fi
+    prevdir="$(pwd)"
+    command cd "${args}" > /dev/null && CD2_BACK_STACK+=("$prevdir") && CD2_FORWARD_STACK=()
+}
+
+function pd() {
+    if [ "${#CD2_BACK_STACK[@]}" -eq 0 ]; then
+        echo "Empty back stack"
+        return 1
+    fi
+    local last_dir=${CD2_BACK_STACK[-1]};
+    unset "CD2_BACK_STACK[-1]"
+    CD2_FORWARD_STACK+=("$(pwd)")
+    command cd "$last_dir"
+}
+
+function fd() {
+    if [ "${#CD2_FORWARD_STACK[@]}" -eq 0 ]; then
+        echo "Empty forward stack"
+        return 1
+    fi
+    local last_dir=${CD2_FORWARD_STACK[-1]};
+    unset "CD2_FORWARD_STACK[-1]"
+    CD2_BACK_STACK+=("$(pwd)")
+    command cd "$last_dir"
 }
