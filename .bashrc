@@ -29,14 +29,26 @@ export EDITOR='vim'
 export VISUAL='vim'
 export PAGER='less'
 
-# Habit picked up from Ubuntu
+# ls habits
 alias l="ls --color=auto"
+alias la="ls --color=auto -a"
 
 # Danger: SSH without checking key
 alias unsafe_ssh="ssh -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/null'"
 alias unsafe_scp="ssh -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/null'"
 
 alias update_all="sudo dnf update --refresh -y && sudo flatpak update -y"
+
+# Ten lines is too short usually
+alias head='head -n 35'
+
+# Move up quickly
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
+alias .......="cd ../../../../../.."
 
 # Less dangerous `rm`
 alias rm='trash-put'

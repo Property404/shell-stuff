@@ -1,17 +1,20 @@
 " Plug plugins
 call plug#begin('~/.vim/plugged')
 Plug 'lifepillar/vim-mucomplete'
-Plug 'Property404/molokai-dmod'
+Plug 'gryf/wombat256grf'
 " Plug 'preservim/tagbar'
 " Plug 'dhruvasagar/vim-table-mode'
 " Plug 'aliou/bats.vim'
 call plug#end()
 
-color molokai-dmod
+color wombat256grf
 
 " Line numbers
 set relativenumber
 set number
+
+" Show current match position
+set shortmess-=S
 
 " Indents
 set cindent
