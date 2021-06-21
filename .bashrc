@@ -30,8 +30,8 @@ export VISUAL='vim'
 export PAGER='less'
 
 # ls habits
-alias l="ls --color=auto"
-alias la="ls --color=auto -a"
+alias l="ls --color=auto -A"
+alias la="ls --color=auto -A"
 
 # Danger: SSH without checking key
 alias unsafe_ssh="ssh -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/null'"
@@ -40,9 +40,10 @@ alias unsafe_scp="ssh -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/
 alias update_all="sudo dnf update --refresh -y && sudo flatpak update -y"
 
 # Ten lines is too short usually
-alias head='head -n 35'
+alias head='head -n 25'
 
-# Move up quickly
+# CD conveniences
+shopt -s autocd
 alias ..="cd .."
 alias ...="cd ../.."
 alias ....="cd ../../.."
@@ -116,4 +117,22 @@ function fd() {
     unset "CD2_FORWARD_STACK[-1]"
     CD2_BACK_STACK+=("$(pwd)")
     command cd "$last_dir"
+}
+
+# Edit directory with regex
+function rd() {
+    if [ "${#@}" -eq "0" ]; then
+        echo "Requires one argument" 1>&2
+        return 0
+    fi
+    cd "$(sed "$1" <(pwd))"
+}
+
+# Change tab title
+function title() {
+  if [[ -z "$ORIG" ]]; then
+    ORIG=$PS1
+  fi
+  TITLE="\[\e]2;$*\a\]"
+  PS1=${ORIG}${TITLE}
 }
