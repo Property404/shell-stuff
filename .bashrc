@@ -2,8 +2,8 @@
 # shellcheck shell=bash
 
 # Station-specific definitions(work/home/vm/etc)
-if [ -f "$HOME/.bashrc_private" ]; then
-    source "$HOME/.bashrc_private"
+if [ -f "$HOME/.bashrc_pre" ]; then
+    source "$HOME/.bashrc_pre"
 fi
 
 # Source global definitions
@@ -26,8 +26,16 @@ stty -ixon
 export PS1='\W \$ '
 
 export EDITOR='vim'
-export VISUAL='vim'
+export VISUAL="lax 'gvim|vim' -v"
+export SYSTEMD_EDITOR='vim'
 export PAGER='less'
+
+# Because I keep accidentally rebooting
+alias reboot='echo "Woah slow down there pardner...if you actually want to reboot, use sudo"'
+
+# Because vim terminals
+alias :q='exit'
+alias :Q='exit'
 
 # ls habits
 alias l="ls --color=auto -A"
@@ -55,7 +63,8 @@ alias .......="cd ../../../../../.."
 alias rm='trash-put'
 
 # Lax aliases
-alias vim="lax gvim -v" # Allows clipboard copying on Fedora
+alias vim="lax 'gvim|vim' -v" # Allows clipboard copying on Fedora
+alias vimdiff="lax 'gvimdiff|vimdiff' -v" # Allows clipboard copying on Fedora
 alias rg="lax rg"
 alias grep="lax grep --color=auto"
 alias ls="lax ls --color=auto"
@@ -71,6 +80,12 @@ alias sl="ls"
 alias gre="grep"
 alias grp="grep"
 alias kilall="killall"
+alias viim="vim"
+# Old habits die hard
+# Precursor to lax
+vimat() {
+    echo "Use lax, doofus"
+}
 
 # A 'hex editor'
 function xvim() {
@@ -136,3 +151,33 @@ function title() {
   TITLE="\[\e]2;$*\a\]"
   PS1=${ORIG}${TITLE}
 }
+
+# Little todo list
+alias todo="vim ~/Documents/todo"
+
+# Note taking script
+function notes() {
+    path="$HOME/.config/notes/"
+    target=$1
+    if [ ! "$target" ]; then
+        target="*"
+    fi
+    target=$(lax -p "@${path}**/${target}")
+    if [ -f "${target}" ]; then
+        lax 'gvim|vim' -v "${target}"
+    else
+        echo "Note '$1' doesn't exist."
+        while true; do
+            read -rp "Would you like to create it(y/n)?" yn
+            case "${yn}" in 
+                [Yy]* ) touch "${path}${1}"; lax 'gvim|vim' -v "${path}${1}"; break;;
+                [Nn]* ) break;;
+            esac
+        done
+    fi
+}
+
+# Station-specific definitions(work/home/vm/etc)
+if [ -f "$HOME/.bashrc_post" ]; then
+    source "$HOME/.bashrc_post"
+fi
