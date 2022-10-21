@@ -26,7 +26,7 @@ stty -ixon
 export PS1='\W \$ '
 
 export EDITOR='vim'
-export VISUAL="lax 'gvim|vim' -v"
+export VISUAL="vim"
 export SYSTEMD_EDITOR='vim'
 export PAGER='less'
 
@@ -37,8 +37,10 @@ alias reboot='echo "Woah slow down there pardner...if you actually want to reboo
 alias :q='exit'
 alias :Q='exit'
 
+alias r=". ranger"
+
 # ls habits
-alias l="ls --color=auto -A"
+alias l="ls --color=auto"
 alias la="ls --color=auto -A"
 
 # Danger: SSH without checking key
@@ -60,10 +62,10 @@ alias ......="cd ../../../../.."
 alias .......="cd ../../../../../.."
 
 # Less dangerous `rm`
-alias rm='trash-put'
+alias rm='lax trash-put'
 
 # Lax aliases
-alias vim="lax 'gvim|vim' -v" # Allows clipboard copying on Fedora
+alias vim="lax 'gvim|vim' -v " # Allows clipboard copying on Fedora
 alias vimdiff="lax 'gvimdiff|vimdiff' -v" # Allows clipboard copying on Fedora
 alias rg="lax rg"
 alias grep="lax grep --color=auto"
@@ -81,6 +83,9 @@ alias gre="grep"
 alias grp="grep"
 alias kilall="killall"
 alias viim="vim"
+alias cago="cargo"
+alias caergo="cargo"
+alias Cargo="cargo"
 # Old habits die hard
 # Precursor to lax
 vimat() {
@@ -90,6 +95,14 @@ vimat() {
 # A 'hex editor'
 function xvim() {
     xxd "$@" | vipe | xxd -r | sponge "$@"
+}
+
+function xvimdiff {
+    vimdiff <(xxd "$1") <(xxd "$2")
+}
+
+function xdiff {
+    diff <(xxd "$1") <(xxd "$2")
 }
 
 # Copy code snippets, etc, stored in KVS (dagan-utils)
@@ -140,7 +153,7 @@ function rd() {
         echo "Requires one argument" 1>&2
         return 0
     fi
-    cd "$(sed "$1" <(pwd))"
+    cd $(sed "s/${1}/${2}/g" <(pwd))
 }
 
 # Change tab title
@@ -153,7 +166,9 @@ function title() {
 }
 
 # Little todo list
-alias todo="vim ~/Documents/todo"
+function todo {
+    vim ~/Documents/todo
+}
 
 # Note taking script
 function notes() {

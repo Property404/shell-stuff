@@ -2,12 +2,20 @@
 call plug#begin('~/.vim/plugged')
 Plug 'lifepillar/vim-mucomplete'
 Plug 'gryf/wombat256grf'
-" Plug 'preservim/tagbar'
-" Plug 'dhruvasagar/vim-table-mode'
-" Plug 'aliou/bats.vim'
+Plug 'preservim/tagbar'
+Plug 'dhruvasagar/vim-table-mode'
+Plug 'plasticboy/vim-markdown'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'mattn/emmet-vim'
+Plug 'rust-lang/rust.vim'
+Plug 'zntfdr/Christmas'
 call plug#end()
 
+let g:vim_markdown_folding_disabled = 1
+
 color wombat256grf
+" Enable this during Christmas time
+"color Christmas
 
 " Line numbers
 set relativenumber
@@ -18,10 +26,12 @@ set shortmess-=S
 
 " Indents
 set cindent
-set copyindent
 set ts=4 sw=4
 set nowrap
 set expandtab
+set shiftwidth=4
+set autoindent
+set smartindent
 
 " reopening a file
 if has("autocmd")
@@ -55,3 +65,6 @@ command QA qa
 
 " Disable EX mode
 :map Q <Nop>
+
+" Highlight Jenkinsfile
+au BufNewFile,BufRead Jenkinsfile setf groovy
