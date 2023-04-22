@@ -118,7 +118,7 @@ declare -a CD2_BACK_STACK=();
 declare -a CD2_FORWARD_STACK=();
 function cd() {
     local args;
-    if ! args=$(lax -Dp -- "$@"); then 
+    if ! args=$(lax -Dp "$@"); then
         return 1
     fi
     prevdir="$(pwd)"
