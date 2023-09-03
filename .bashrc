@@ -107,7 +107,7 @@ function xdiff {
 
 # Copy code snippets, etc, stored in KVS (dagan-utils)
 function snip() {
-    kvs get "${@}" | wl-copy -n
+    kvs snip "${@}"
 }
 
 # Very cool `cd` wrapper
