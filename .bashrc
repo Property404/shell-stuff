@@ -37,8 +37,6 @@ alias reboot='echo "Woah slow down there pardner...if you actually want to reboo
 alias :q='exit'
 alias :Q='exit'
 
-alias r=". ranger"
-
 # ls habits
 alias l="ls --color=auto"
 alias la="ls --color=auto -A"
