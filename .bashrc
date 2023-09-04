@@ -43,7 +43,7 @@ alias la="ls --color=auto -A"
 
 # Danger: SSH without checking key
 alias unsafe_ssh="ssh -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/null'"
-alias unsafe_scp="ssh -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/null'"
+alias unsafe_scp="scp -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/null'"
 
 alias update_all="sudo dnf update --refresh -y && sudo flatpak update -y"
 
