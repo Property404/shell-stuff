@@ -24,12 +24,33 @@ install_system_dependencies() {
     if [[ -e "${marker}" ]]; then
         return 0
     fi
-
     log "Installing system dependencies"
+
+    local -r common_deps="git tmux moreutils vim make"
+    local -r linux_deps="$common_deps trash-cli"
+
+    local update;
+    local install;
+    local deps;
     if command -v dnf > /dev/null; then
-        local -r dependencies="git tmux moreutils vim trash-cli make"
-        sudo bash -c "dnf update -y && dnf install -y $dependencies"
+        update="dnf update --refresh -y"
+        install="dnf install -y"
+        deps="$linux_deps"
+    elif command -v apt > /dev/null; then
+        update="apt-get update && apt-get upgrade -y"
+        install="apt-get install -y"
+        deps="$linux_deps"
+    elif command -v brew > /dev/null; then
+        update="brew update && brew upgrade -y"
+        install="brew install -y"
+        deps="$common_deps gnu-sed"
+    else
+        echo "Could not install dependencies - unknown system"
+        return 1
     fi
+
+    echo "${update} && ${install} ${deps}"
+    sudo bash -c "${update} && ${install} ${deps}"
 
     touch "${marker}"
 }
