@@ -81,6 +81,7 @@ install_lax() {
         log "Installing lax"
         pushd /tmp/
         git clone https://github.com/Property404/lax
+        cd lax
         cargo install --path .
         popd
     fi
