@@ -1,0 +1,6 @@
+# Tags made by rusty-tags
+rusty-tags.vi
+
+# Vim swap files
+*.swp
+*.swo

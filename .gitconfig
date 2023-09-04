@@ -1,0 +1,13 @@
+[user]
+	email = git@dagans.dev
+	name = Property404
+[alias]
+   st = status
+   br = branch
+   sw = switch
+   sweet = submodule update --init --recursive
+   gclone = "!f() { git clone git@github.com:Property404/$1.git; }; f"
+[core]
+    excludesFile = ~/.gitexclude
+[init]
+    defaultBranch = main

@@ -20,6 +20,12 @@ backup_file() {
 }
 
 install_system_dependencies() {
+    local -r marker="/tmp/.dev.dagans.shell-stuff.updated-dependencies"
+    if [[ -e "${marker}" ]]; then
+        return 0
+    fi
+    touch "${marker}"
+
     log "Installing system dependencies"
     if command -v dnf > /dev/null; then
         local -r dependencies="git tmux moreutils vim trash-cli"
@@ -59,10 +65,10 @@ install_lax() {
 }
 
 install_dot_files() {
-    local -a files=(".bashrc" ".vimrc" ".tmux.conf")
+    local -a files=(".bashrc" ".vimrc" ".tmux.conf" ".gitconfig" ".gitexclude")
     for file in "${files[@]}"; do
         home_file="${HOME}/${file}"
-        if [[ ! -e "$home_file" ]] || ! diff "$file" "$home_file"; then
+        if [[ ! -e "$home_file" ]] || ! diff "$file" "$home_file" > /dev/null; then
             log "Installing ${file}"
             backup_file "$HOME/${file}"
             cp "${file}" "$HOME/${file}"
