@@ -4,16 +4,16 @@
 
 # Launch an array of actions in the background and wait for them
 do_tasks() {
-	declare -n methods="$1"
+	local -n methods="$1"
 	# Keep a list of flags to detect which job failed/passed
-	declare -a flags;
+	local -a flags;
 
 	for method in "${methods[@]}"; do
 		echo Running "'$method'"
 		# Run job and raise flag on failure
 		flag_name="/tmp/task_err_flag_$((RANDOM))"
 		flags+=("$flag_name")
-		pee "$method || touch $flag_name"&
+		bash -c "$method || touch $flag_name"&
 	done
 
 	for method in "${methods[@]}"; do
