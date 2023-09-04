@@ -24,13 +24,14 @@ install_system_dependencies() {
     if [[ -e "${marker}" ]]; then
         return 0
     fi
-    touch "${marker}"
 
     log "Installing system dependencies"
     if command -v dnf > /dev/null; then
-        local -r dependencies="git tmux moreutils vim trash-cli"
+        local -r dependencies="git tmux moreutils vim trash-cli make"
         sudo bash -c "dnf update -y && dnf install -y $dependencies"
     fi
+
+    touch "${marker}"
 }
 
 install_dagan_utils() {
