@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # "Universal" updater script
 # Updates distro packages, Snap, and Flatpak
+declare -r FLAG_PREFIX=".dev.dagans.shell-stuff.gupdate.task_err_flag"
 
 # Launch an array of actions in the background and wait for them
 do_tasks() {
@@ -11,18 +12,15 @@ do_tasks() {
 	for method in "${methods[@]}"; do
 		echo Running "'$method'"
 		# Run job and raise flag on failure
-		flag_name="/tmp/task_err_flag_$((RANDOM))"
+		flag_name="/tmp/${FLAG_PREFIX}_$((RANDOM))"
 		flags+=("$flag_name")
 		bash -c "$method || touch $flag_name"&
 	done
 
-	for method in "${methods[@]}"; do
-		wait
-	done
-
 	# Fail if any of our jobs failed
 	for flag in "${flags[@]}"; do
-		if [ -f "$flag" ];then
+		wait
+		if [ -f "$flag" ]; then
 			echo "Failed"
 			rm "$flag"
 			exit 1
