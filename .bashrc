@@ -171,8 +171,9 @@ function todo {
 
 # Note taking script
 function notes() {
-    path="$HOME/.config/notes/"
-    target=$1
+    local -r path="$HOME/.config/notes/"
+    local target=$1
+    mkdir -p "$path"
     if [ ! "$target" ]; then
         target="*"
     fi
