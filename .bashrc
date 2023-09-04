@@ -157,11 +157,12 @@ function rd() {
 
 # Change tab title
 function title() {
-  if [[ -z "$ORIG" ]]; then
-    ORIG=$PS1
-  fi
-  TITLE="\[\e]2;$*\a\]"
-  PS1=${ORIG}${TITLE}
+    declare orig;
+    if [[ -z "$orig" ]]; then
+        orig=$PS1
+    fi
+    TITLE="\[\e]2;$*\a\]"
+    PS1=${orig}${TITLE}
 }
 
 # Little todo list
