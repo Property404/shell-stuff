@@ -90,7 +90,7 @@ install_lax() {
 install_dot_files() {
     local -a files=(\
     ".bashrc" ".vimrc" ".tmux.conf" ".gitconfig" ".gitexclude"\
-    .local/bin/* )
+    .local/bin/* ".bash_completion" )
     for file in "${files[@]}"; do
         home_file="${HOME}/${file}"
         if [[ ! -e "$home_file" ]] || ! diff "$file" "$home_file" > /dev/null; then
