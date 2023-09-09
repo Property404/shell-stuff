@@ -171,27 +171,29 @@ function todo {
 }
 
 # Note taking script
-function notes() {
-    local -r path="$HOME/.config/notes/"
-    local target=$1
-    mkdir -p "$path"
-    if [ ! "$target" ]; then
-        target="*"
-    fi
-    target=$(lax -p "@${path}**/${target}")
-    if [ -f "${target}" ]; then
-        lax 'gvim|vim' -v "${target}"
-    else
-        echo "Note '$1' doesn't exist."
-        while true; do
-            read -rp "Would you like to create it(y/n)?" yn
-            case "${yn}" in 
-                [Yy]* ) touch "${path}${1}"; lax 'gvim|vim' -v "${path}${1}"; break;;
-                [Nn]* ) break;;
-            esac
-        done
-    fi
-}
+if ! command -v notes > /dev/null; then
+    function notes() {
+        local -r path="$HOME/.config/notes/"
+        local target=$1
+        mkdir -p "$path"
+        if [ ! "$target" ]; then
+            target="*"
+        fi
+        target=$(lax -p "@${path}**/${target}")
+        if [ -f "${target}" ]; then
+            lax 'gvim|vim' -v "${target}"
+        else
+            echo "Note '$1' doesn't exist."
+            while true; do
+                read -rp "Would you like to create it(y/n)?" yn
+                case "${yn}" in
+                    [Yy]* ) touch "${path}${1}"; lax 'gvim|vim' -v "${path}${1}"; break;;
+                    [Nn]* ) break;;
+                esac
+            done
+        fi
+    }
+fi
 
 # Station-specific definitions(work/home/vm/etc)
 if [ -f "$HOME/.bashrc_post" ]; then
