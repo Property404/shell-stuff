@@ -165,9 +165,9 @@ function title() {
     PS1=${orig}${TITLE}
 }
 
-# Little todo list
+# Dumb little todo list
 function todo {
-    vim ~/Documents/todo
+    notes todo
 }
 
 # Note taking script
