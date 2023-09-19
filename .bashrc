@@ -47,9 +47,6 @@ alias unsafe_scp="scp -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/
 
 alias update_all="sudo dnf update --refresh -y && sudo flatpak update -y"
 
-# Ten lines is too short usually
-alias head='head -n 25'
-
 # CD conveniences
 shopt -s autocd
 alias ..="cd .."
