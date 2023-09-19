@@ -150,7 +150,7 @@ function fd() {
 function rd() {
     if [ "${#@}" -eq "0" ]; then
         echo "Requires one argument" 1>&2
-        return 0
+        return 1
     fi
     cd $(sed "s/${1}/${2}/g" <(pwd))
 }
