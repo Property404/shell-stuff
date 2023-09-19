@@ -3,7 +3,7 @@
 set -e
 
 log() {
-    echo ">>> ${*}"
+    echo -e "\e[32m${*}\e[0m"
 }
 
 backup_file() {
