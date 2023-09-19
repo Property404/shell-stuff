@@ -1,5 +1,5 @@
+#!/usr/bin/env bash
 # 'Public' .bashrc
-# shellcheck shell=bash
 
 # Station-specific definitions(work/home/vm/etc)
 if [ -f "$HOME/.bashrc_pre" ]; then
@@ -129,7 +129,7 @@ function pd() {
     local last_dir=${CD2_BACK_STACK[-1]};
     unset "CD2_BACK_STACK[-1]"
     CD2_FORWARD_STACK+=("$(pwd)")
-    command cd "$last_dir"
+    command cd "$last_dir" || return 1
 }
 
 function fd() {
@@ -140,7 +140,7 @@ function fd() {
     local last_dir=${CD2_FORWARD_STACK[-1]};
     unset "CD2_FORWARD_STACK[-1]"
     CD2_BACK_STACK+=("$(pwd)")
-    command cd "$last_dir"
+    command cd "$last_dir" || return 1
 }
 
 # Edit directory with regex
@@ -149,7 +149,7 @@ function rd() {
         echo "Requires one argument" 1>&2
         return 1
     fi
-    cd $(sed "s/${1}/${2}/g" <(pwd))
+    cd "$(sed "s/${1}/${2}/g" <(pwd))" || return 1
 }
 
 # Change tab title
