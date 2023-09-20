@@ -7,6 +7,3 @@ if [ -n "$(ls -A ~/.bash_completion.d)" ]; then
         source "$bcfile"
     done
 fi
-
-
-
