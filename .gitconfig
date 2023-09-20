@@ -7,6 +7,7 @@
     sw = switch
     sweet = submodule update --init --recursive
     gclone = "!f() { git clone git@github.com:Property404/$1.git; }; f"
+    forge  = "!f() { git commit --amend --no-edit --date \"$(date)\"; }; f"
 [core]
     excludesFile = ~/.gitexclude
 [init]
