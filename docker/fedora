@@ -1,0 +1,11 @@
+FROM fedora:38
+
+# This should help cache
+RUN sudo dnf upgrade --refresh -y
+RUN sudo dnf install -y git tmux moreutils vim make gcc ripgrep diffutils
+
+COPY . /workdir
+WORKDIR /workdir
+
+RUN ./bootstrap.sh --quick
+CMD bash -l

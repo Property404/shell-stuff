@@ -1,0 +1,16 @@
+# Debian 11 because that's what ephemerals at work use
+FROM debian:11
+
+# This should help cache
+RUN apt-get update -y
+RUN apt-get upgrade -y
+RUN apt-get install -y git tmux moreutils vim gcc
+
+# Bootstrap actually relies on this:
+RUN apt-get install -y sudo
+
+COPY . /workdir
+WORKDIR /workdir
+
+RUN ./bootstrap.sh --quick
+CMD bash -l
