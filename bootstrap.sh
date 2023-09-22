@@ -26,7 +26,7 @@ install_system_dependencies() {
     fi
     log "Installing system dependencies"
 
-    local -r common_deps="git tmux moreutils vim make"
+    local -r common_deps="git tmux moreutils vim make gcc"
     local -r linux_deps="$common_deps trash-cli"
 
     local update;
@@ -35,11 +35,11 @@ install_system_dependencies() {
     if command -v dnf > /dev/null; then
         update="dnf update --refresh -y"
         install="dnf install -y"
-        deps="$linux_deps"
+        deps="$linux_deps openssl-devel diffutils"
     elif command -v apt > /dev/null; then
         update="apt-get update && apt-get upgrade -y"
         install="apt-get install -y"
-        deps="$linux_deps"
+        deps="$linux_deps libssl-dev"
     elif command -v brew > /dev/null; then
         update="brew update && brew upgrade -y"
         install="brew install -y"
@@ -70,6 +70,7 @@ install_rust() {
     if ! command -v rustup > /dev/null; then
         log "Installing rust"
         curl --tlsv1.3 https://sh.rustup.rs -sSf | sh -s -- -y
+        source "$HOME/.cargo/env"
         cargo install cargo-edit
         cargo install cargo-audit
         cargo install ripgrep
