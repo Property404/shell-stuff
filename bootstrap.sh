@@ -44,7 +44,7 @@ install_system_dependencies() {
         install="apt-get install -y"
         deps="$linux_deps libssl-dev"
     elif command -v brew > /dev/null; then
-        update="brew update && brew upgrade -y"
+        update="brew update && brew upgrade"
         install="brew install -y"
         deps="$common_deps gnu-sed"
         use_sudo=
