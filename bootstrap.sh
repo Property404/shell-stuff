@@ -26,7 +26,9 @@ install_system_dependencies() {
     fi
     log "Installing system dependencies"
 
-    local -r common_deps="git tmux moreutils vim make gcc ripgrep curl nodejs"
+    local -r linting_programs="shellcheck black pylint gem"
+    local -r common_deps="${linting_programs} \\
+        git tmux moreutils vim make gcc ripgrep curl nodejs"
     local -r linux_deps="$common_deps trash-cli file"
 
     local update;
