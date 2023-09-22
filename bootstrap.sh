@@ -26,6 +26,7 @@ install_system_dependencies() {
     fi
     log "Installing system dependencies"
 
+    local use_sudo=1
     local -r linting_programs="shellcheck black pylint gem yamllint"
     local -r common_deps="${linting_programs} \\
         git tmux moreutils vim make gcc ripgrep curl nodejs"
@@ -38,7 +39,7 @@ install_system_dependencies() {
         update="dnf update --refresh -y"
         install="dnf install -y"
         deps="$linux_deps openssl-devel diffutils"
-    elif command -v apt > /dev/null; then
+    elif command -v apt-get > /dev/null; then
         update="apt-get update && apt-get upgrade -y"
         install="apt-get install -y"
         deps="$linux_deps libssl-dev"
@@ -46,13 +47,19 @@ install_system_dependencies() {
         update="brew update && brew upgrade -y"
         install="brew install -y"
         deps="$common_deps gnu-sed"
+        use_sudo=
     else
         echo "Could not install dependencies - unknown system"
         return 1
     fi
 
-    echo "${update} && ${install} ${deps}"
-    sudo bash -c "${update} && ${install} ${deps}"
+    local -r command="${update} && ${install} ${deps}"
+    echo "${command}"
+    if [[ -n "${use_sudo}" ]]; then
+        sudo bash -c "${command}"
+    else
+        bash -c "${command}"
+    fi
 
     touch "${marker}"
 }
