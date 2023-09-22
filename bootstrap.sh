@@ -44,9 +44,14 @@ install_system_dependencies() {
         install="apt-get install -y"
         deps="$linux_deps libssl-dev"
     elif command -v brew > /dev/null; then
+        # Github CI fix
+        brew update
+        brew remove 'node*' || true
+
         update="brew update && brew upgrade"
         install="brew install -y"
-        deps="$common_deps gnu-sed"
+        deps="$common_deps gnu-sed node"
+        # Brew doesn't use sudo
         use_sudo=
     else
         echo "Could not install dependencies - unknown system"
