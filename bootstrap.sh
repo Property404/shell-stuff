@@ -26,7 +26,7 @@ install_system_dependencies() {
     fi
     log "Installing system dependencies"
 
-    local -r common_deps="git tmux moreutils vim make gcc"
+    local -r common_deps="git tmux moreutils vim make gcc ripgrep curl"
     local -r linux_deps="$common_deps trash-cli"
 
     local update;
@@ -70,11 +70,13 @@ install_rust() {
     if ! command -v rustup > /dev/null; then
         log "Installing rust"
         curl --tlsv1.3 https://sh.rustup.rs -sSf | sh -s -- -y
-        source "$HOME/.cargo/env"
-        cargo install cargo-edit
-        cargo install cargo-audit
-        cargo install ripgrep
     fi
+    source "$HOME/.cargo/env"
+}
+
+install_rust_cargo_tools() {
+    log "Installing rust cargo tools"
+    cargo install cargo-edit cargo-audit
 }
 
 install_lax() {
@@ -98,12 +100,44 @@ install_dot_files() {
     done
 }
 
+install_vim_plug() {
+    log "Installing VimPlug"
+    curl --tlsv1.3 -fLo ~/.vim/autoload/plug.vim --create-dirs \
+        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    # Vim will complain about plugins not found, so pipe `yes`
+    yes | vim +PlugInstall +qall > /dev/null
+}
+
 main() {
+    local -r USAGE="Usage: $(basename "${0}") [-qh]"
+    local -r HELP="Set up a system for the first time
+
+$USAGE
+
+Help:
+    -q, --quick Skip long steps
+    -h, --help	Display this message"
+
+    local quick
+    while true; do
+        case "$1" in
+            -q | --quick ) quick=1; shift ;;
+            -h | --help ) echo "$HELP"; return 0 ;;
+            -- ) shift; break ;;
+            -* ) echo -e "Unrecognized option: $1\n$USAGE" >&2; return 1 ;;
+            * ) break ;;
+        esac
+    done
+
     install_system_dependencies
     install_dagan_utils
     install_rust
+    if [[ -z "${quick}" ]]; then
+        install_rust_cargo_tools
+    fi
     install_lax
     install_dot_files
+    install_vim_plug
 }
 
-main
+main "${@}"
