@@ -29,8 +29,8 @@ install_system_dependencies() {
     local use_sudo=1
     local -r linting_programs="shellcheck black pylint gem yamllint"
     local -r common_deps="${linting_programs} \\
-        git tmux moreutils vim make gcc ripgrep curl nodejs"
-    local -r linux_deps="$common_deps trash-cli file"
+        git tmux moreutils vim make gcc ripgrep curl"
+    local -r linux_deps="$common_deps trash-cli file nodejs"
 
     local update;
     local install;
