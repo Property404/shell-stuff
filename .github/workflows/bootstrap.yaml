@@ -5,10 +5,13 @@ on: [push, pull_request]
 
 jobs:
   build:
+    runs-on: ${{ matrix.os }}
 
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Bootstrap
-      run: ./bootstrap.sh
+      - uses: actions/checkout@v4
+      - name: Bootstrap
+        run: ./bootstrap.sh --quick
