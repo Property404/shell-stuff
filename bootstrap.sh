@@ -79,11 +79,7 @@ install_rust() {
 install_lax() {
     if ! command -v lax > /dev/null; then
         log "Installing lax"
-        pushd /tmp/
-        git clone https://github.com/Property404/lax
-        cd lax
-        cargo install --path .
-        popd
+        cargo install --git https://github.com/Property404/lax
     fi
 }
 
