@@ -58,7 +58,7 @@ install_system_dependencies() {
         brew remove 'node@18' || true
 
         update="brew update && brew upgrade"
-        install="brew install -y"
+        install="brew install"
         deps+=" gnu-sed node "
         # Brew doesn't use sudo
         use_sudo=
