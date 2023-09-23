@@ -112,7 +112,8 @@ install_lax() {
     fi
 }
 
-install_dot_files() {
+install_dotfiles() {
+    pushd dotfiles
     local -a files=(\
     ".bashrc" ".vimrc" ".tmux.conf" ".gitconfig" ".gitexclude"\
     .local/bin/* ".bash_completion" )
@@ -125,6 +126,7 @@ install_dot_files() {
         fi
     done
     touch ~/.gitconfig_custom
+    popd
 }
 
 install_vim_plug() {
@@ -176,6 +178,11 @@ set_up_de() {
     fi
 }
 
+set_up_firefox() {
+    log "Setting up Firefox"
+    cp config/user.js ~/.mozilla/firefox/*.default-release/
+}
+
 main() {
     local -r USAGE="Usage: $(basename "${0}") [-h] --profile <profile>"
     local -r HELP="Set up a system for the first time
@@ -218,13 +225,14 @@ Help:
         install_rust_cargo_tools
     fi
     install_lax
-    install_dot_files
+    install_dotfiles
     install_vim_plug
     if [[ -n "${FEAT_NOTES}" ]]; then
         install_notes
     fi
     if [[ -n "${FEAT_GUI}" ]]; then
         set_up_de
+        set_up_firefox
     fi
     log "System has been set up!"
 }
