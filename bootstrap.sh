@@ -7,6 +7,10 @@ error() {
     return 1
 }
 
+warn() {
+    echo -e "\e[33mwarning: ${*}\e[0m"
+}
+
 log() {
     echo -e "\e[32m${*}\e[0m"
 }
@@ -63,8 +67,7 @@ install_system_dependencies() {
         # Brew doesn't use sudo
         use_sudo=
     else
-        echo "Could not install dependencies - unknown system"
-        return 1
+        error "Could not install dependencies - unknown system"
     fi
 
     local -r command="${update} && ${install} ${deps}"
@@ -121,6 +124,7 @@ install_dot_files() {
             cp "${file}" "$HOME/${file}"
         fi
     done
+    touch ~/.gitconfig_custom
 }
 
 install_vim_plug() {
@@ -133,8 +137,43 @@ install_vim_plug() {
 
 install_notes() {
     log "Installing Notes"
-    BASH_COMPLETIONS_DIR=~/.bash_completion.d\
-        cargo install --git https://github.com/Property404/notes
+    if ! command -v notes > /dev/null; then
+        BASH_COMPLETIONS_DIR=~/.bash_completion.d\
+            cargo install --git https://github.com/Property404/notes
+    fi
+}
+
+add_de_packages() {
+    log "Adding desktop environment packages"
+    if [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
+        log "DE: Gnome"
+        PACKAGES+=" gnome-tweaks "
+    elif [[ "${XDG_CURRENT_DESKTOP}" == "KDE" ]]; then
+        log "DE: KDE"
+        # Nothing to do
+    elif [[ "${OSTYPE}" == "darwin" ]]; then
+        log "DE: Aqua"
+        # Nothing to do
+    else
+        error "Could not determine DE type"
+    fi
+}
+
+set_up_de() {
+    log "Setting up desktop environment"
+    if [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
+        log "DE: Gnome"
+        gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
+        gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+    elif [[ "${XDG_CURRENT_DESKTOP}" == "KDE" ]]; then
+        log "DE: KDE"
+        # Nothing to do
+    elif [[ "${OSTYPE}" == "darwin" ]]; then
+        log "DE: Aqua"
+        # Nothing to do
+    else
+        error "Could not determine DE type"
+    fi
 }
 
 main() {
@@ -147,7 +186,7 @@ Help:
     -p, --profile Choose which profile to use
     -h, --help	  Display this message"
 
-    local profile
+    local profile=""
     while true; do
         case "$1" in
             -p | --profile ) profile="${2}"; shift 2 ;;
@@ -169,6 +208,9 @@ Help:
     log "Using profile '${profile}'"
     source "./profiles/${profile}"
 
+    if [[ -n "${FEAT_GUI}" ]]; then
+        add_de_packages
+    fi
     install_system_dependencies
     install_dagan_utils
     install_rust
@@ -180,6 +222,9 @@ Help:
     install_vim_plug
     if [[ -n "${FEAT_NOTES}" ]]; then
         install_notes
+    fi
+    if [[ -n "${FEAT_GUI}" ]]; then
+        set_up_de
     fi
     log "System has been set up!"
 }
