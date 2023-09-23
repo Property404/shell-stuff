@@ -1,6 +1,8 @@
 [user]
     email = git@dagans.dev
     name = Property404
+[include]
+    path="~/.gitconfig_custom"
 [alias]
     st = status
     br = branch
