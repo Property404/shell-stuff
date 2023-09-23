@@ -13,5 +13,4 @@ jobs:
       - name: Install dependencies
         run: sudo apt install shellcheck
       - name: Lint scripts
-        run: shellcheck -e SC1091 -e SC1090 bootstrap.sh\
-          dotfiles/{.bashrc,.bash_completion}
+        run: shellcheck -e SC1091 -e SC1090 bootstrap.sh dotfiles/{.bashrc,.bash_completion}
