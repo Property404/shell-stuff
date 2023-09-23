@@ -15,6 +15,31 @@ log() {
     echo -e "\e[32m${*}\e[0m"
 }
 
+add_pkgs() {
+    local -r systype="$1"
+    if [[ "${systype}" == "macos" ]]; then
+        if [[ "${OSTYPE}" != "darwin" ]]; then
+            return 0
+        fi
+    elif [[ "${systype}" == "linux" ]]; then
+        if [[ "${OSTYPE}" != "gnu-linux" ]]; then
+            return 0
+        fi
+    elif [[ "${systype}" == "dnf" ]]; then
+        if ! command -v dnf > /dev/null; then
+            return 0
+        fi
+    elif [[ "${systype}" == "apt" ]]; then
+        if ! command -v apt-get > /dev/null; then
+            return 0
+        fi
+    elif [[ "${systype}" != "all" ]] ; then
+        error "Unknown system type: ${systype}"
+    fi
+    shift 1
+    PACKAGES+=" ${*} "
+}
+
 backup_file() {
     local -r file="$1"
     if [[ ! -e "$file" ]]; then
@@ -35,21 +60,17 @@ install_system_dependencies() {
     fi
     log "Installing system dependencies"
 
-    local deps
-    deps="${PACKAGES} \\
-        git tmux moreutils vim make gcc ripgrep curl"
-    if [[ "$OSTYPE" == "linux-gnu" ]]; then
-        deps+=" trash-cli file nodejs pkg-config "
-        if [[ -n "${FEAT_GUI}" ]]; then
-            deps+=" gvim "
-        fi
-        if [[ -n "${FEAT_GENERATE_KEYS}" ]]; then
-            if command -v dnf > /dev/null; then
-                deps+=" openssh "
-            else
-                deps+=" ssh "
-            fi
-        fi
+    add_pkgs all "git tmux moreutils vim make gcc ripgrep curl"
+    add_pkgs linux "trash-cli file nodejs pkg-config"
+    add_pkgs dnf "openssl-devel diffutils"
+    add_pkgs apt "libssl-dev"
+    add_pkgs macos "gnu-sed node"
+    if [[ -n "${FEAT_GUI}" ]]; then
+        add_pkgs linux "gvim"
+    fi
+    if [[ -n "${FEAT_GENERATE_KEYS}" ]]; then
+        add_pkgs dnf "openssh"
+        add_pkgs apt "ssh"
     fi
 
     local update;
@@ -58,11 +79,9 @@ install_system_dependencies() {
     if command -v dnf > /dev/null; then
         update="dnf update --refresh -y"
         install="dnf install -y"
-        deps+=" openssl-devel diffutils "
     elif command -v apt-get > /dev/null; then
         update="apt-get update && apt-get upgrade -y"
         install="apt-get install -y"
-        deps+=" libssl-dev "
     elif command -v brew > /dev/null; then
         # Github CI fix
         brew update
@@ -70,14 +89,13 @@ install_system_dependencies() {
 
         update="brew update && brew upgrade"
         install="brew install"
-        deps+=" gnu-sed node "
         # Brew doesn't use sudo
         use_sudo=
     else
         error "Could not install dependencies - unknown system"
     fi
 
-    local -r command="${update} && ${install} ${deps}"
+    local -r command="${update} && ${install} ${PACKAGES}"
     echo "${command}"
     if [[ -n "${use_sudo}" ]]; then
         sudo bash -c "${command}"
@@ -156,7 +174,7 @@ add_de_packages() {
     log "Adding desktop environment packages"
     if [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
         log "DE: Gnome"
-        PACKAGES+=" gnome-tweaks "
+        add_pkgs linux "gnome-tweaks"
     elif [[ "${XDG_CURRENT_DESKTOP}" == "KDE" ]]; then
         log "DE: KDE"
         # Nothing to do
