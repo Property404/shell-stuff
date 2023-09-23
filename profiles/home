@@ -1,0 +1,3 @@
+#vim: bash
+# Profile for home laptop/desktop
+source ./profiles/workstation

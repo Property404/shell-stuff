@@ -1,4 +1,5 @@
 #vim: bash
+# Parent profile for work and home
 source ./profiles/dev
 FEAT_NOTES=1
 FEAT_GUI=1

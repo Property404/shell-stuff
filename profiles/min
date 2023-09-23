@@ -1,4 +1,6 @@
 #vim: bash
+# Minimum set up
+# All other profiles should inherit from this
 PACKAGES=
 FEAT_CARGO_DEV_TOOLS=
 FEAT_GUI=
