@@ -39,9 +39,16 @@ install_system_dependencies() {
     deps="${PACKAGES} \\
         git tmux moreutils vim make gcc ripgrep curl"
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
-        deps+=" trash-cli file nodejs "
+        deps+=" trash-cli file nodejs pkg-config "
         if [[ -n "${FEAT_GUI}" ]]; then
             deps+=" gvim "
+        fi
+        if [[ -n "${FEAT_GENERATE_KEYS}" ]]; then
+            if command -v dnf > /dev/null; then
+                deps+=" openssh "
+            else
+                deps+=" ssh "
+            fi
         fi
     fi
 
@@ -183,6 +190,15 @@ set_up_firefox() {
     cp config/user.js ~/.mozilla/firefox/*.default-release/
 }
 
+generate_ssh_keys() {
+    if [[ ! -f "${HOME}/.ssh/id_ed25519.pub" ]]; then
+        log "Generating SSH keys"
+        ssh-keygen -t ed25519 \
+            -C "dontemailme@dagans.dev" \
+            -q -f "$HOME/.ssh/id_ed25519" -N ""
+    fi
+}
+
 main() {
     local -r USAGE="Usage: $(basename "${0}") [-h] --profile <profile>"
     local -r HELP="Set up a system for the first time
@@ -233,6 +249,9 @@ Help:
     if [[ -n "${FEAT_GUI}" ]]; then
         set_up_de
         set_up_firefox
+    fi
+    if [[ -n "${FEAT_GENERATE_KEYS}" ]]; then
+        generate_ssh_keys
     fi
     if [[ $(type -t post_bootstrap) == function ]]; then
         log "Running post-bootstrap configuration"
