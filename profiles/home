@@ -1,3 +1,17 @@
-#vim: bash
+# vim: syntax=bash
 # Profile for home laptop/desktop
 source ./profiles/workstation
+
+if ! cat /etc/os-release | grep 'ID=fedora' > /dev/null; then
+    error "This profile expects fedora"
+fi
+
+PACKAGES+=" flatpak "
+# RPM fusion free
+PACKAGES+="  https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm "
+
+post_bootstrap() {
+    # Install Signal
+    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    flatpak install org.signal.Signal
+}

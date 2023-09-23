@@ -195,7 +195,7 @@ Help:
 
     local profile=""
     while true; do
-        case "$1" in
+        case "${1}" in
             -p | --profile ) profile="${2}"; shift 2 ;;
             -h | --help ) echo "$HELP"; return 0 ;;
             -- ) shift; break ;;
@@ -233,6 +233,10 @@ Help:
     if [[ -n "${FEAT_GUI}" ]]; then
         set_up_de
         set_up_firefox
+    fi
+    if [[ $(type -t post_bootstrap) == function ]]; then
+        log "Running post-bootstrap configuration"
+        post_bootstrap
     fi
     log "System has been set up!"
 }
