@@ -9,8 +9,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Install dependencies
-      run: sudo apt install shellcheck
-    - name: Lint scripts
-      run: shellcheck -e SC1091 -e SC1090 bootstrap.sh .bashrc .bash_completion
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: sudo apt install shellcheck
+      - name: Lint scripts
+        run: shellcheck -e SC1091 -e SC1090 bootstrap.sh\
+          dotfiles/{.bashrc,.bash_completion}
