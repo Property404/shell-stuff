@@ -1,4 +1,4 @@
-#vim: bash
+# vim: syntax=bash
 # For systems where development is done
 source ./profiles/min
 FEAT_CARGO_DEV_TOOLS=1

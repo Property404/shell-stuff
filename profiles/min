@@ -1,4 +1,4 @@
-#vim: bash
+# vim: syntax=bash
 # Minimum set up
 # All other profiles should inherit from this
 PACKAGES=

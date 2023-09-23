@@ -1,4 +1,4 @@
-#vim: bash
+# vim: syntax=bash
 # Parent profile for work and home
 source ./profiles/dev
 FEAT_NOTES=1
