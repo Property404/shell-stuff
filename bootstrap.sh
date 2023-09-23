@@ -2,6 +2,11 @@
 # Bootstrap a new system
 set -e
 
+error() {
+    echo -e "\e[31merror: ${*}\e[0m"
+    return 1
+}
+
 log() {
     echo -e "\e[32m${*}\e[0m"
 }
@@ -26,23 +31,27 @@ install_system_dependencies() {
     fi
     log "Installing system dependencies"
 
-    local use_sudo=1
-    local -r linting_programs="shellcheck black pylint gem yamllint"
-    local -r common_deps="${linting_programs} \\
+    local deps
+    deps="${PACKAGES} \\
         git tmux moreutils vim make gcc ripgrep curl"
-    local -r linux_deps="$common_deps trash-cli file nodejs"
+    if [[ "$OSTYPE" == "linux-gnu" ]]; then
+        deps+=" trash-cli file nodejs "
+        if [[ -n "${FEAT_GUI}" ]]; then
+            deps+=" gvim "
+        fi
+    fi
 
     local update;
     local install;
-    local deps;
+    local use_sudo=1
     if command -v dnf > /dev/null; then
         update="dnf update --refresh -y"
         install="dnf install -y"
-        deps="$linux_deps openssl-devel diffutils"
+        deps+=" openssl-devel diffutils "
     elif command -v apt-get > /dev/null; then
         update="apt-get update && apt-get upgrade -y"
         install="apt-get install -y"
-        deps="$linux_deps libssl-dev"
+        deps+=" libssl-dev "
     elif command -v brew > /dev/null; then
         # Github CI fix
         brew update
@@ -50,7 +59,7 @@ install_system_dependencies() {
 
         update="brew update && brew upgrade"
         install="brew install -y"
-        deps="$common_deps gnu-sed node"
+        deps+=" gnu-sed node "
         # Brew doesn't use sudo
         use_sudo=
     else
@@ -122,36 +131,57 @@ install_vim_plug() {
     yes | vim +PlugInstall +qall > /dev/null
 }
 
+install_notes() {
+    log "Installing Notes"
+    BASH_COMPLETIONS_DIR=~/.bash_completion.d\
+        cargo install --git https://github.com/Property404/notes
+}
+
 main() {
-    local -r USAGE="Usage: $(basename "${0}") [-qh]"
+    local -r USAGE="Usage: $(basename "${0}") [-h] --profile <profile>"
     local -r HELP="Set up a system for the first time
 
 $USAGE
 
 Help:
-    -q, --quick Skip long steps
-    -h, --help	Display this message"
+    -p, --profile Choose which profile to use
+    -h, --help	  Display this message"
 
-    local quick
+    local profile
     while true; do
         case "$1" in
-            -q | --quick ) quick=1; shift ;;
+            -p | --profile ) profile="${2}"; shift 2 ;;
             -h | --help ) echo "$HELP"; return 0 ;;
             -- ) shift; break ;;
-            -* ) echo -e "Unrecognized option: $1\n$USAGE" >&2; return 1 ;;
+            -* ) error "Unrecognized option: $1\n$USAGE" ;;
             * ) break ;;
         esac
     done
 
+    set -u
+
+    if [[ -z "${profile}" ]]; then
+        error "Please select a profile\n$USAGE"
+    fi
+    if [[ ! -f "./profiles/${profile}" ]]; then
+        error "Profile '${profile}' does not exist"
+    fi
+    log "Using profile '${profile}'"
+    source "./profiles/${profile}"
+
     install_system_dependencies
     install_dagan_utils
     install_rust
-    if [[ -z "${quick}" ]]; then
+    if [[ -n "${FEAT_CARGO_DEV_TOOLS}" ]]; then
         install_rust_cargo_tools
     fi
     install_lax
     install_dot_files
     install_vim_plug
+    if [[ -n "${FEAT_NOTES}" ]]; then
+        install_notes
+    fi
+    log "System has been set up!"
 }
 
 main "${@}"

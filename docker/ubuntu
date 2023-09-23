@@ -11,5 +11,5 @@ RUN apt-get install -y sudo
 COPY . /workdir
 WORKDIR /workdir
 
-RUN ./bootstrap.sh --quick
+RUN ./bootstrap.sh --profile min
 CMD bash -l

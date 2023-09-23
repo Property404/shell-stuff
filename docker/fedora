@@ -7,5 +7,5 @@ RUN sudo dnf install -y git tmux moreutils vim make gcc ripgrep diffutils
 COPY . /workdir
 WORKDIR /workdir
 
-RUN ./bootstrap.sh --quick
+RUN ./bootstrap.sh --profile dev
 CMD bash -l
