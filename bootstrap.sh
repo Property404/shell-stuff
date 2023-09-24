@@ -95,7 +95,10 @@ install_system_dependencies() {
         error "Could not install dependencies - unknown system"
     fi
 
-    local -r command="${update} && ${install} ${PACKAGES}"
+    local command="${update} && ${install} ${PACKAGES}"
+    if [[ -n "${LATE_PACKAGES}" ]]; then
+        command+=" && ${install} ${LATE_PACKAGES}"
+    fi
     echo "${command}"
     if [[ -n "${use_sudo}" ]]; then
         sudo bash -c "${command}"
