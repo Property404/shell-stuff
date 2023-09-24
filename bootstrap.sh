@@ -106,6 +106,13 @@ install_system_dependencies() {
     touch "${marker}"
 }
 
+install_ruby_packages() {
+    if [[ -z "$RUBY_PACKAGES" ]]; then
+        log "Installing gems: $RUBY_PACKAGES"
+        gem install "$RUBY_PACKAGES"
+    fi
+}
+
 install_dagan_utils() {
     if ! command -v peval > /dev/null; then
         log "Installing dagan-utils"

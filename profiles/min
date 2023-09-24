@@ -3,6 +3,7 @@
 # All other profiles should inherit from this
 PACKAGES=
 LATE_PACKAGES=
+RUBY_PACKAGES=
 FEAT_CARGO_DEV_TOOLS=
 FEAT_GUI=
 FEAT_NOTES=
