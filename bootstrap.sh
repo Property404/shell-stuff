@@ -65,9 +65,6 @@ install_system_dependencies() {
     add_pkgs dnf "openssl-devel diffutils"
     add_pkgs apt "libssl-dev"
     add_pkgs macos "gnu-sed node"
-    if [[ -n "${FEAT_GUI}" ]]; then
-        add_pkgs linux "gvim"
-    fi
     if [[ -n "${FEAT_GENERATE_KEYS}" ]]; then
         add_pkgs dnf "openssh"
         add_pkgs apt "ssh"
@@ -173,19 +170,33 @@ install_notes() {
     fi
 }
 
-add_de_packages() {
-    log "Adding desktop environment packages"
-    if [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
-        log "DE: Gnome"
-        add_pkgs linux "gnome-tweaks"
-    elif [[ "${XDG_CURRENT_DESKTOP}" == "KDE" ]]; then
-        log "DE: KDE"
-        # Nothing to do
-    elif [[ "${OSTYPE}" == "darwin" ]]; then
+add_gui_packages() {
+    log "Adding GUI packages"
+    if [[ "${OSTYPE}" == "darwin" ]]; then
         log "DE: Aqua"
         # Nothing to do
+    elif [[ "${OSTYPE}" == "gnu-linux" ]]; then
+        add_pkgs linux "gvim"
+
+        if [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
+            log "DE: Gnome"
+            add_pkgs linux "gnome-tweaks"
+        elif [[ "${XDG_CURRENT_DESKTOP}" == "KDE" ]]; then
+            log "DE: KDE"
+            # Nothing to do
+        else
+            error "Could not determine DE type"
+        fi
+
+        if [[ "${XDG_SESSION_TYPE}" == "x11" ]]; then
+            add_pkgs linux "xsel"
+        elif [[ "${XDG_SESSION_TYPE}" == "wayland" ]]; then
+            add_pkgs linux "wl-clipboard"
+        else
+            error "Could not determine session type"
+        fi
     else
-        error "Could not determine DE type"
+        error "Could not determine OS type"
     fi
 }
 
@@ -253,7 +264,7 @@ Help:
     source "./profiles/${profile}"
 
     if [[ -n "${FEAT_GUI}" ]]; then
-        add_de_packages
+        add_gui_packages
     fi
     install_system_dependencies
     install_dagan_utils
