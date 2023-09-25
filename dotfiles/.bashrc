@@ -65,7 +65,9 @@ function maybelax() {
 }
 
 # Less dangerous `rm`
-alias rm='maybelax trash-put'
+if command -v trash-put > /dev/null; then
+    alias rm='maybelax trash-put'
+fi
 
 # Lax aliases
 if command -v gvim > /dev/null; then
