@@ -60,11 +60,15 @@ install_system_dependencies() {
     fi
     log "Installing system dependencies"
 
-    add_pkgs all "git tmux moreutils vim make gcc ripgrep curl"
+    add_pkgs all "git tmux moreutils vim make ripgrep curl"
     add_pkgs linux "trash-cli file nodejs pkg-config"
-    add_pkgs dnf "openssl-devel diffutils"
-    add_pkgs apt "libssl-dev"
+    add_pkgs dnf "diffutils"
     add_pkgs macos "gnu-sed node"
+    if [[ -n "${FEAT_CARGO_DEV_TOOLS}" ]]; then
+        add_pkgs all "gcc"
+        add_pkgs dnf "openssl-devel"
+        add_pkgs apt "libssl-dev"
+    fi
     if [[ -n "${FEAT_GENERATE_KEYS}" ]]; then
         add_pkgs dnf "openssh"
         add_pkgs apt "ssh"
