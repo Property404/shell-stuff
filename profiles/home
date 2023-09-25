@@ -6,11 +6,12 @@ if ! cat /etc/os-release | grep 'ID=fedora' > /dev/null; then
     error "This profile expects fedora"
 fi
 
-PACKAGES+=" flatpak "
+add_pkgs linux "flatpak"
 # Silly stuff
-PACKAGES+=" fortune-mod cowsay "
+add_pkgs dnf "fortune-mod"
+add_pkgs all "cowsay"
 # RPM fusion free
-PACKAGES+="  https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm "
+add_pkgs dnf "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
 
 # RPM FUSION PACKAGES (uses `LATE_PACKAGES`)
 # For playing videos
