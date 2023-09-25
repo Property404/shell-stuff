@@ -215,8 +215,15 @@ set_up_de() {
     log "Setting up desktop environment"
     if [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
         log "DE: Gnome"
+        # Dark mode
         gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
         gsettings set org.gnome.desktop.interface color-scheme prefer-dark
+        # We use trash-cli for rm, so trash will definitely fill up
+        gsettings set org.gnome.desktop.privacy remove-old-trash-files true
+        # Remove old temporary files
+        gsettings set org.gnome.desktop.privacy remove-old-temp-files true
+        # Disable annoying sounds
+        gsettings set org.gnome.desktop.sound event-sounds false
     elif [[ "${XDG_CURRENT_DESKTOP}" == "KDE" ]]; then
         log "DE: KDE"
         # Nothing to do
