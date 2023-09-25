@@ -128,7 +128,7 @@ declare -a CD2_BACK_STACK=();
 declare -a CD2_FORWARD_STACK=();
 function cd() {
     local args;
-    if command -v lax; then
+    if command -v lax > /dev/null; then
         if ! args=$(lax -Dp "$@"); then
             return 1
         fi
