@@ -56,15 +56,29 @@ alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
 alias .......="cd ../../../../../.."
 
+function maybelax() {
+    if command -v lax > /dev/null; then
+        lax "${@}"
+    else
+        "${@}"
+    fi
+}
+
 # Less dangerous `rm`
-alias rm='lax trash-put'
+alias rm='maybelax trash-put'
 
 # Lax aliases
-alias vim="lax 'gvim|vim' -v " # Allows clipboard copying on Fedora
-alias vimdiff="lax 'gvimdiff|vimdiff' -v" # Allows clipboard copying on Fedora
-alias rg="lax rg"
-alias grep="lax grep --color=auto"
-alias ls="lax ls --color=auto"
+if command -v gvim > /dev/null; then
+    # Allows clipboard copying on Fedora
+    alias vim="maybelax gvim -v "
+    alias vimdiff="maybelax gvimdiff -v"
+else
+    alias vim="maybelax vim"
+    alias vimdiff="maybelax vimdiff"
+fi
+alias rg="maybelax rg"
+alias grep="maybelax grep --color=auto"
+alias ls="maybelax ls --color=auto"
 
 # Because --color=always is a mouthful
 alias less="less -r"
@@ -114,8 +128,12 @@ declare -a CD2_BACK_STACK=();
 declare -a CD2_FORWARD_STACK=();
 function cd() {
     local args;
-    if ! args=$(lax -Dp "$@"); then
-        return 1
+    if command -v lax; then
+        if ! args=$(lax -Dp "$@"); then
+            return 1
+        fi
+    else
+        args="$*"
     fi
     prevdir="$(pwd)"
     command cd "${args}" > /dev/null && CD2_BACK_STACK+=("$prevdir") && CD2_FORWARD_STACK=()
@@ -164,33 +182,12 @@ function title() {
 
 # Dumb little todo list
 function todo {
-    notes todo
+    if command -v notes > /dev/null; then
+        notes todo
+    else
+        vim ~/Documents/todo
+    fi
 }
-
-# Note taking script
-if ! command -v notes > /dev/null; then
-    function notes() {
-        local -r path="$HOME/.config/notes/"
-        local target=$1
-        mkdir -p "$path"
-        if [ ! "$target" ]; then
-            target="*"
-        fi
-        target=$(lax -p "@${path}**/${target}")
-        if [ -f "${target}" ]; then
-            lax 'gvim|vim' -v "${target}"
-        else
-            echo "Note '$1' doesn't exist."
-            while true; do
-                read -rp "Would you like to create it(y/n)?" yn
-                case "${yn}" in
-                    [Yy]* ) touch "${path}${1}"; lax 'gvim|vim' -v "${path}${1}"; break;;
-                    [Nn]* ) break;;
-                esac
-            done
-        fi
-    }
-fi
 
 # Station-specific definitions(work/home/vm/etc)
 if [ -f "$HOME/.bashrc_post" ]; then

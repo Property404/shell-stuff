@@ -274,16 +274,24 @@ Help:
     log "Using profile '${profile}'"
     source "./profiles/${profile}"
 
+    if [[ -n "${FEAT_LAX}" || -n "${FEAT_CARGO_DEV_TOOLS}" || -n "${FEAT_NOTES}" ]]; then
+        FEAT_RUST=1
+    fi
+
     if [[ -n "${FEAT_GUI}" ]]; then
         add_gui_packages
     fi
     install_system_dependencies
     install_dagan_utils
-    install_rust
+    if [[ -n "${FEAT_RUST}" ]]; then
+        install_rust
+    fi
     if [[ -n "${FEAT_CARGO_DEV_TOOLS}" ]]; then
         install_rust_cargo_tools
     fi
-    install_lax
+    if [[ -n "${FEAT_LAX}" ]]; then
+        install_lax
+    fi
     install_dotfiles
     install_vim_plug
     if [[ -n "${FEAT_NOTES}" ]]; then

@@ -3,3 +3,4 @@
 source ./profiles/dev
 FEAT_NOTES=1
 FEAT_GUI=1
+FEAT_LAX=1
