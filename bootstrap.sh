@@ -22,7 +22,7 @@ add_pkgs() {
             return 0
         fi
     elif [[ "${systype}" == "linux" ]]; then
-        if [[ "${OSTYPE}" != "gnu-linux" ]]; then
+        if [[ "${OSTYPE}" != "linux-gnu" ]]; then
             return 0
         fi
     elif [[ "${systype}" == "dnf" ]]; then
@@ -186,7 +186,7 @@ add_gui_packages() {
     if [[ "${OSTYPE}" == "darwin" ]]; then
         log "DE: Aqua"
         # Nothing to do
-    elif [[ "${OSTYPE}" == "gnu-linux" ]]; then
+    elif [[ "${OSTYPE}" == "linux-gnu" ]]; then
         add_pkgs linux "gvim"
 
         if [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
