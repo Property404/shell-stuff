@@ -10,3 +10,8 @@ if [[ "${OSTYPE}" != "linux-gnu" ]]; then
 fi
 
 add_pkgs linux "kodi chromium kodi-inputstream-adaptive"
+
+post_bootstrap() {
+    # Generate certs to have web interface over TLS
+    ./scripts/kodi-generate-certs.sh
+}
