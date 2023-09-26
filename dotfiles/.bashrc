@@ -22,24 +22,29 @@ export PATH
 # Disable annoying flow control shit
 stty -ixon
 
+# Ignore commands starting with space
+HISTIGNORE=' *'
+
 # Less annoying prompt
 export PS1='\W \$ '
 
-export EDITOR='vim'
-export VISUAL="vim"
-export SYSTEMD_EDITOR='vim'
+# `more` is for losers
 export PAGER='less'
 
 # Because I keep accidentally rebooting
 alias reboot='echo "Woah slow down there pardner...if you actually want to reboot, use sudo"'
 
 # Because vim terminals
+alias :e="${EDITOR}"
 alias :q='exit'
 alias :Q='exit'
 
 # ls habits
 alias l="ls --color=auto"
 alias la="ls --color=auto -A"
+
+# To help catch bad links
+alias ln="ln -w"
 
 # Danger: SSH without checking key
 alias unsafe_ssh="ssh -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/null'"
@@ -69,15 +74,22 @@ if command -v trash-put > /dev/null; then
     alias rm='maybelax trash-put'
 fi
 
-# Lax aliases
-if command -v gvim > /dev/null; then
+# Set editor
+export EDITOR
+if command -v nvim > /dev/null; then
+    EDITOR='nvim'
+elif command -v gvim > /dev/null; then
     # Allows clipboard copying on Fedora
-    alias vim="maybelax gvim -v "
-    alias vimdiff="maybelax gvimdiff -v"
+    EDITOR='gvim -v'
 else
-    alias vim="maybelax vim"
-    alias vimdiff="maybelax vimdiff"
+    EDITOR='vim'
 fi
+export VISUAL="${EDITOR}"
+export SYSTEMD_EDITOR="${EDITOR}"
+alias vimdiff="maybelax ${EDITOR} -d"
+alias vim="maybelax ${EDITOR}"
+
+# Lax aliases
 alias rg="maybelax rg"
 alias grep="maybelax grep --color=auto"
 alias ls="maybelax ls --color=auto"
@@ -184,11 +196,7 @@ function title() {
 
 # Dumb little todo list
 function todo {
-    if command -v notes > /dev/null; then
-        notes todo
-    else
-        vim ~/Documents/todo
-    fi
+    notes todo
 }
 
 # Station-specific definitions(work/home/vm/etc)
