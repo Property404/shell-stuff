@@ -309,6 +309,7 @@ Help:
         add_gui_packages
     fi
     install_system_dependencies "${skip_update}"
+    install_ruby_packages
     install_dagan_utils
     if [[ -n "${FEAT_RUST}" ]]; then
         install_rust
