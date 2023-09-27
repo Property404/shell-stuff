@@ -4,5 +4,5 @@ source ./profiles/min
 FEAT_RUST_DEV=1
 FEAT_GENERATE_KEYS=1
 FEAT_LAX=1
-add_pkgs all "shellcheck black pylint gem yamllint"
+add_pkgs all "shellcheck black pylint yamllint"
 RUBY_PACKAGES+=" mdl "

@@ -74,6 +74,10 @@ install_system_dependencies() {
         add_pkgs dnf "openssh"
         add_pkgs apt "ssh"
     fi
+    if [[ -n "$RUBY_PACKAGES" ]]; then
+        add_pkgs linux "gem"
+        add_pkgs macos "ruby"
+    fi
 
     local update;
     local install;
@@ -114,7 +118,7 @@ install_system_dependencies() {
 }
 
 install_ruby_packages() {
-    if [[ -z "$RUBY_PACKAGES" ]]; then
+    if [[ -n "$RUBY_PACKAGES" ]]; then
         log "Installing gems: $RUBY_PACKAGES"
         gem install "$RUBY_PACKAGES"
     fi
