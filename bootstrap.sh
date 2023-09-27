@@ -90,8 +90,7 @@ install_system_dependencies() {
         install="apt-get install -y"
     elif command -v brew > /dev/null; then
         # Github CI fix
-        brew update
-        brew remove 'node@18' || true
+        brew remove 'node@18' 2>/dev/null || true
 
         update="brew update && brew upgrade"
         install="brew install"
