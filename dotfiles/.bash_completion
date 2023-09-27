@@ -2,7 +2,7 @@
 
 mkdir -p ~/.bash_completion.d
 
-if [ -n "$(ls -A ~/.bash_completion.d)" ]; then
+if [[ -n "$(ls ~/.bash_completion.d)" ]]; then
     for bcfile in ~/.bash_completion.d/* ; do
         source "$bcfile"
     done
