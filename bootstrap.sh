@@ -54,11 +54,8 @@ backup_file() {
 }
 
 install_system_dependencies() {
-    local -r marker="/tmp/.dev.dagans.shell-stuff.updated-dependencies"
-    if [[ -e "${marker}" ]]; then
-        return 0
-    fi
     log "Installing system dependencies"
+    local -r skip_update="${1}"
 
     add_pkgs all "git tmux moreutils vim make ripgrep curl"
     add_pkgs linux "trash-cli file nodejs pkg-config"
@@ -99,7 +96,11 @@ install_system_dependencies() {
         error "Could not install dependencies - unknown system"
     fi
 
-    local command="${update} && ${install} ${PACKAGES}"
+    local command=""
+    if [[ -z "${skip_update}" ]]; then
+        command+="${update} && "
+    fi
+    command+="${install} ${PACKAGES}"
     if [[ -n "${LATE_PACKAGES}" ]]; then
         command+=" && ${install} ${LATE_PACKAGES}"
     fi
@@ -109,8 +110,6 @@ install_system_dependencies() {
     else
         bash -c "${command}"
     fi
-
-    touch "${marker}"
 }
 
 install_ruby_packages() {
@@ -263,12 +262,15 @@ $USAGE
 
 Help:
     -p, --profile Choose which profile to use
+    --skip-update Skip updating system packages
     -h, --help	  Display this message"
 
     local profile=""
+    local skip_update=""
     while true; do
         case "${1}" in
             -p | --profile ) profile="${2}"; shift 2 ;;
+            --skip-update ) skip_update=1; shift 1 ;;
             -h | --help ) echo "$HELP"; return 0 ;;
             -- ) shift; break ;;
             -* ) error "Unrecognized option: $1\n$USAGE" ;;
@@ -294,7 +296,7 @@ Help:
     if [[ -n "${FEAT_GUI}" ]]; then
         add_gui_packages
     fi
-    install_system_dependencies
+    install_system_dependencies "${skip_update}"
     install_dagan_utils
     if [[ -n "${FEAT_RUST}" ]]; then
         install_rust
