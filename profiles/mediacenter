@@ -9,7 +9,7 @@ if [[ "${OSTYPE}" != "linux-gnu" ]]; then
     error "This profile expects linux"
 fi
 
-add_pkgs linux "kodi chromium kodi-inputstream-adaptive"
+add_pkgs linux "kodi kodi-inputstream-adaptive rsync unattended-upgrades ufw"
 
 post_bootstrap() {
     # Generate certs to have web interface over TLS
