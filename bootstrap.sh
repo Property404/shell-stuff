@@ -210,7 +210,7 @@ add_gui_packages() {
             log "DE: KDE"
             # Nothing to do
         else
-            error "Could not determine DE type"
+            warn "Could not determine DE type"
         fi
 
         if [[ "${XDG_SESSION_TYPE}" == "x11" ]]; then
