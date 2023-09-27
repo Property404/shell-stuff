@@ -67,7 +67,7 @@ install_system_dependencies() {
     if [[ -n "${FEAT_NVIM}" ]]; then
         add_pkgs all "nvim"
     fi
-    if [[ -n "${FEAT_CARGO_DEV_TOOLS}" ]]; then
+    if [[ -n "${FEAT_RUST_DEV}" ]]; then
         add_pkgs all "gcc"
         add_pkgs dnf "openssl-devel"
         add_pkgs apt "libssl-dev"
@@ -141,7 +141,7 @@ install_rust() {
 
 install_rust_cargo_tools() {
     log "Installing rust cargo tools"
-    cargo install cargo-edit cargo-audit
+    cargo install cargo-edit cargo-audit rusty-tags
 }
 
 install_lax() {
@@ -287,7 +287,7 @@ Help:
     log "Using profile '${profile}'"
     source "./profiles/${profile}"
 
-    if [[ -n "${FEAT_LAX}" || -n "${FEAT_CARGO_DEV_TOOLS}" || -n "${FEAT_NOTES}" ]]; then
+    if [[ -n "${FEAT_LAX}" || -n "${FEAT_RUST_DEV}" || -n "${FEAT_NOTES}" ]]; then
         FEAT_RUST=1
     fi
 
@@ -299,7 +299,7 @@ Help:
     if [[ -n "${FEAT_RUST}" ]]; then
         install_rust
     fi
-    if [[ -n "${FEAT_CARGO_DEV_TOOLS}" ]]; then
+    if [[ -n "${FEAT_RUST_DEV}" ]]; then
         install_rust_cargo_tools
     fi
     if [[ -n "${FEAT_LAX}" ]]; then
