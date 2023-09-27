@@ -226,7 +226,10 @@ add_gui_packages() {
 
 set_up_de() {
     log "Setting up desktop environment"
-    if [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
+    if [[ "${OSTYPE}" == "darwin"* ]]; then
+        log "DE: Aqua"
+        # Nothing to do
+    elif [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
         log "DE: Gnome"
         # Dark mode
         gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
@@ -239,9 +242,6 @@ set_up_de() {
         gsettings set org.gnome.desktop.sound event-sounds false
     elif [[ "${XDG_CURRENT_DESKTOP}" == "KDE" ]]; then
         log "DE: KDE"
-        # Nothing to do
-    elif [[ "${OSTYPE}" == "darwin"* ]]; then
-        log "DE: Aqua"
         # Nothing to do
     else
         error "Could not determine DE type"
