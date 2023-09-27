@@ -126,11 +126,15 @@ install_ruby_packages() {
 install_dagan_utils() {
     if ! command -v peval > /dev/null; then
         log "Installing dagan-utils"
-        pushd /tmp/
+        local -r tempdir="$(mktemp -d)"
+        pushd "${tempdir}"
         git clone https://github.com/Property404/dagan-utils
-        cd dagan-utils
+        pushd dagan-utils
         make install
         popd
+        rm -rf dagan-utils
+        popd
+        rmdir "${tempdir}"
     fi
 }
 
