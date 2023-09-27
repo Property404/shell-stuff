@@ -4,3 +4,9 @@ rusty-tags.vi
 # Vim swap files
 *.swp
 *.swo
+
+# Backup files
+*.bak
+
+# Intentional ignore
+*.ignore
