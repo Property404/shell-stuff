@@ -19,11 +19,11 @@ log() {
 add_pkgs() {
     local -r systype="$1"
     if [[ "${systype}" == "macos" ]]; then
-        if [[ "${OSTYPE}" != "darwin"* ]]; then
+        if [[ "$(uname)" != "Darwin" ]]; then
             return 0
         fi
     elif [[ "${systype}" == "linux" ]]; then
-        if [[ "${OSTYPE}" != "linux-gnu" ]]; then
+        if [[ "$(uname)" != "Linux" ]]; then
             return 0
         fi
     elif [[ "${systype}" == "dnf" ]]; then
@@ -119,7 +119,8 @@ install_system_dependencies() {
 install_ruby_packages() {
     if [[ -n "$RUBY_PACKAGES" ]]; then
         log "Installing gems: $RUBY_PACKAGES"
-        gem install "$RUBY_PACKAGES"
+        #shellcheck disable=2086
+        gem install ${RUBY_PACKAGES}
     fi
 }
 
@@ -196,10 +197,10 @@ install_notes() {
 
 add_gui_packages() {
     log "Adding GUI packages"
-    if [[ "${OSTYPE}" == "darwin"* ]]; then
+    if [[ "$(uname)" == "Darwin" ]]; then
         log "DE: Aqua"
         # Nothing to do
-    elif [[ "${OSTYPE}" == "linux-gnu" ]]; then
+    elif [[ "$(uname)" == "Linux" ]]; then
         add_pkgs linux "gvim"
 
         if [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
@@ -226,7 +227,7 @@ add_gui_packages() {
 
 set_up_de() {
     log "Setting up desktop environment"
-    if [[ "${OSTYPE}" == "darwin"* ]]; then
+    if [[ "$(uname)" == "Darwin" ]]; then
         log "DE: Aqua"
         # Nothing to do
     elif [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
