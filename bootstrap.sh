@@ -250,6 +250,10 @@ set_up_de() {
 
 set_up_firefox() {
     log "Setting up Firefox"
+    if [[ ! -e ~/.mozilla/firefox/ ]]; then
+        warn "Could not set up firefox"
+        return 0
+    fi
     cp config/user.js ~/.mozilla/firefox/*.default-release/
 }
 
