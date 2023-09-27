@@ -201,7 +201,8 @@ add_gui_packages() {
         log "DE: Aqua"
         # Nothing to do
     elif [[ "$(uname)" == "Linux" ]]; then
-        add_pkgs linux "gvim"
+        add_pkgs dnf "gvim"
+        add_pkgs apt "vim-gtk3"
 
         if [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
             log "DE: Gnome"
