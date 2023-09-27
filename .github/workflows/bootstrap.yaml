@@ -13,5 +13,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Bootstrap
+      - name: Bootstrap (min profile)
         run: ./bootstrap.sh --profile min --skip-update
+      - name: Bootstrap (dev profile)
+        run: ./bootstrap.sh --profile dev --skip-update
