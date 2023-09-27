@@ -246,7 +246,7 @@ set_up_de() {
         log "DE: KDE"
         # Nothing to do
     else
-        error "Could not determine DE type"
+        warn "Could not determine DE type"
     fi
 }
 
