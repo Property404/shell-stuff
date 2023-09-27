@@ -134,7 +134,7 @@ install_dagan_utils() {
 install_rust() {
     if ! command -v rustup > /dev/null; then
         log "Installing rust"
-        curl --tlsv1.3 https://sh.rustup.rs -sSf | sh -s -- -y
+        curl --tlsv1.2 https://sh.rustup.rs -sSf | sh -s -- -y
     fi
     source "$HOME/.cargo/env"
 }
@@ -173,7 +173,7 @@ install_dotfiles() {
 install_vim_plug() {
     log "Installing VimPlug"
     mkdir -p ~/.vim/autoload/
-    curl --tlsv1.3 -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    curl --tlsv1.2 -fLo ~/.vim/autoload/plug.vim --create-dirs \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     # Vim will complain about plugins not found, so pipe `yes`
     yes | vim +PlugInstall +qall > /dev/null
