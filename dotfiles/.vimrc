@@ -18,7 +18,7 @@ let g:vim_markdown_folding_disabled = 1
 let g:coc_start_at_startup = v:false
 
 " Enable this during Christmas time
-"color Christmas
+" color Christmas
 
 if has('nvim')
     " Auto dark/light mode switching
@@ -66,6 +66,7 @@ endif
 
 " Tags
 set tags=./tags,tags;$HOME
+autocmd BufRead *.rs :setlocal tags=./rusty-tags.vi;/
 
 " Buffer/Window/Split behavior
 set hidden
@@ -76,6 +77,9 @@ set splitbelow
 set wildignore=*.o,*.su,*.bak,*.pyc,*.elf,*.so
 set wildmenu
 set wildmode=longest:list,full
+
+" Don't break in the middle of the word when wrapping
+set linebreak
 
 " Lol
 command WQA wqa
