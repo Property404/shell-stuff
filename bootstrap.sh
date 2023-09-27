@@ -19,7 +19,7 @@ log() {
 add_pkgs() {
     local -r systype="$1"
     if [[ "${systype}" == "macos" ]]; then
-        if [[ "${OSTYPE}" != "darwin" ]]; then
+        if [[ "${OSTYPE}" != "darwin"* ]]; then
             return 0
         fi
     elif [[ "${systype}" == "linux" ]]; then
@@ -192,7 +192,7 @@ install_notes() {
 
 add_gui_packages() {
     log "Adding GUI packages"
-    if [[ "${OSTYPE}" == "darwin" ]]; then
+    if [[ "${OSTYPE}" == "darwin"* ]]; then
         log "DE: Aqua"
         # Nothing to do
     elif [[ "${OSTYPE}" == "linux-gnu" ]]; then
@@ -236,7 +236,7 @@ set_up_de() {
     elif [[ "${XDG_CURRENT_DESKTOP}" == "KDE" ]]; then
         log "DE: KDE"
         # Nothing to do
-    elif [[ "${OSTYPE}" == "darwin" ]]; then
+    elif [[ "${OSTYPE}" == "darwin"* ]]; then
         log "DE: Aqua"
         # Nothing to do
     else
