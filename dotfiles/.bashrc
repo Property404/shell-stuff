@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # 'Public' .bashrc
+# shellcheck disable=SC2139,SC1091
 
 # Station-specific definitions(work/home/vm/etc)
 if [ -f "$HOME/.bashrc_pre" ]; then
@@ -22,7 +23,7 @@ export PATH
 # Disable annoying flow control shit
 stty -ixon
 
-# Ignore commands starting with space
+# Ignore commands starting with space from history
 HISTIGNORE=' *'
 
 # Less annoying prompt
@@ -30,14 +31,11 @@ export PS1='\W \$ '
 
 # `more` is for losers
 export PAGER='less'
+# Show `ls` colors on macOS
+export CLICOLOR=1
 
 # Because I keep accidentally rebooting
 alias reboot='echo "Woah slow down there pardner...if you actually want to reboot, use sudo"'
-
-# Because vim terminals
-alias :e="${EDITOR}"
-alias :q='exit'
-alias :Q='exit'
 
 # ls habits
 alias l="ls --color=auto"
@@ -88,6 +86,10 @@ export VISUAL="${EDITOR}"
 export SYSTEMD_EDITOR="${EDITOR}"
 alias vimdiff="maybelax ${EDITOR} -d"
 alias vim="maybelax ${EDITOR}"
+# Because vim terminals
+alias :e="${EDITOR}"
+alias :q='exit'
+alias :Q='exit'
 
 # Lax aliases
 alias rg="maybelax rg"
