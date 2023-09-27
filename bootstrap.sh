@@ -64,6 +64,9 @@ install_system_dependencies() {
     add_pkgs linux "trash-cli file nodejs pkg-config"
     add_pkgs dnf "diffutils"
     add_pkgs macos "gnu-sed node"
+    if [[ -n "${FEAT_NVIM}" ]]; then
+        add_pkgs all "nvim"
+    fi
     if [[ -n "${FEAT_CARGO_DEV_TOOLS}" ]]; then
         add_pkgs all "gcc"
         add_pkgs dnf "openssl-devel"
@@ -149,10 +152,12 @@ install_lax() {
 }
 
 install_dotfiles() {
+    mkdir -p ~/.local/bin/
+    mkdir -p ~/.config/nvim/
     pushd dotfiles
     local -a files=(\
     ".bashrc" ".vimrc" ".tmux.conf" ".gitconfig" ".gitexclude"\
-    .local/bin/* ".bash_completion" )
+    .local/bin/* ".bash_completion" ".config/nvim/init.vim" )
     for file in "${files[@]}"; do
         home_file="${HOME}/${file}"
         if [[ ! -e "$home_file" ]] || ! diff "$file" "$home_file" > /dev/null; then
@@ -167,6 +172,7 @@ install_dotfiles() {
 
 install_vim_plug() {
     log "Installing VimPlug"
+    mkdir -p ~/.vim/autoload/
     curl --tlsv1.3 -fLo ~/.vim/autoload/plug.vim --create-dirs \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     # Vim will complain about plugins not found, so pipe `yes`
