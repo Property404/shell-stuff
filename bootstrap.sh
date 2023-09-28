@@ -120,7 +120,7 @@ install_ruby_packages() {
     if [[ -n "$RUBY_PACKAGES" ]]; then
         log "Installing gems: $RUBY_PACKAGES"
         #shellcheck disable=2086
-        gem install ${RUBY_PACKAGES}
+        gem install --user-install ${RUBY_PACKAGES}
     fi
 }
 
