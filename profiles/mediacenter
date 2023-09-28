@@ -10,7 +10,7 @@ if [[ "$(uname)" != "Linux" ]]; then
 fi
 
 add_pkgs linux "kodi kodi-inputstream-adaptive rsync"
-add_pkgs apt "unattended-upgrades ufw"
+add_pkgs apt "unattended-upgrades ufw python3-pycryptodome build-essential"
 
 post_bootstrap() {
     # Generate certs to have web interface over TLS
