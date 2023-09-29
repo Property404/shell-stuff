@@ -13,7 +13,7 @@ main() {
     openssl genrsa -passout "${PASSWORD}" -aes128 2048  > server.key
     openssl rsa \
         -passin "${PASSWORD}" -in server.key \
-        -passout "${PASSWORD}" -out server.key 
+        -passout "${PASSWORD}" -out server.key
     echo -e "us\nca\n\n\n\n\n\n\n\n" |\
         openssl req -utf8 -new -key server.key -out server.csr
     openssl x509 -in server.csr -out server.crt -req -signkey server.key -days 3650
