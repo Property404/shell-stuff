@@ -50,13 +50,14 @@ set number
 set shortmess-=S
 
 " Indents
-set cindent
-set ts=4 sw=4
-set nowrap
-set expandtab
-set shiftwidth=4
+filetype plugin indent on
 set autoindent
-set smartindent
+set ts=4 sw=4
+
+" Wrapping
+set nowrap
+" Don't break in the middle of the word when wrapping
+set linebreak
 
 " reopening a file
 if has("autocmd")
@@ -77,9 +78,6 @@ set splitbelow
 set wildignore=*.o,*.su,*.bak,*.pyc,*.elf,*.so
 set wildmenu
 set wildmode=longest:list,full
-
-" Don't break in the middle of the word when wrapping
-set linebreak
 
 " Lol
 command WQA wqa
