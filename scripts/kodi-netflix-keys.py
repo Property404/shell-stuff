@@ -33,33 +33,43 @@ except ImportError:
     from Crypto.Cipher import AES
     from Crypto.Util import Padding
 
-IS_MACOS = platform.system().lower() == 'darwin'
+IS_MACOS = platform.system().lower() == "darwin"
 
 # Script configuration
-BROWSER_PATH = '*'
+BROWSER_PATH = "*"
 DEBUG_PORT = 9222
-LOCALHOST_ADDRESS = 'localhost'
-URL = 'https://www.netflix.com/login'
+LOCALHOST_ADDRESS = "localhost"
+URL = "https://www.netflix.com/login"
 
 
 class Main(object):
 
-    app_version = '1.1.6'
+    app_version = "1.1.6"
     _msg_id = 0
     _ws = None
 
     def __init__(self, browser_temp_path):
-        show_msg('')
-        show_msg(TextFormat.BOLD + 'NFAuthentication Key for Linux/MacOS (Version {})'.format(self.app_version),
-                 TextFormat.COL_LIGHT_BLUE)
-        show_msg('')
-        show_msg('Disclaimer:')
-        show_msg('This script and source code available on GitHub are provided "as is" without warranty of any kind, either express or implied. Use at your own risk. The use of the software is done at your own discretion and risk with the agreement that you will be solely responsible for any damage resulting from such activities and you are solely responsible for adequate data protection.',
-                 TextFormat.COL_GREEN)
-        show_msg('')
+        show_msg("")
+        show_msg(
+            TextFormat.BOLD
+            + "NFAuthentication Key for Linux/MacOS (Version {})".format(
+                self.app_version
+            ),
+            TextFormat.COL_LIGHT_BLUE,
+        )
+        show_msg("")
+        show_msg("Disclaimer:")
+        show_msg(
+            'This script and source code available on GitHub are provided "as is" without warranty of any kind, either express or implied. Use at your own risk. The use of the software is done at your own discretion and risk with the agreement that you will be solely responsible for any damage resulting from such activities and you are solely responsible for adequate data protection.',
+            TextFormat.COL_GREEN,
+        )
+        show_msg("")
         browser_proc = None
         try:
-            input_msg('Press "ENTER" key to accept the disclaimer and start, or "CTRL+C" to cancel', TextFormat.BOLD)
+            input_msg(
+                'Press "ENTER" key to accept the disclaimer and start, or "CTRL+C" to cancel',
+                TextFormat.BOLD,
+            )
             browser_proc = open_browser(browser_temp_path)
             self.operations()
         except Warning as exc:
@@ -67,8 +77,9 @@ class Main(object):
             if browser_proc:
                 browser_proc.terminate()
         except Exception as exc:
-            show_msg('An error is occurred:\r\n' + str(exc), TextFormat.COL_LIGHT_RED)
+            show_msg("An error is occurred:\r\n" + str(exc), TextFormat.COL_LIGHT_RED)
             import traceback
+
             show_msg(traceback.format_exc())
             if browser_proc:
                 browser_proc.terminate()
@@ -80,90 +91,131 @@ class Main(object):
                 pass
 
     def operations(self):
-        show_msg('Establish connection with the browser... please wait')
+        show_msg("Establish connection with the browser... please wait")
         self.get_browser_debug_endpoint()
-        self.ws_request('Network.enable')
-        self.ws_request('Page.enable')
-        show_msg('Opening login webpage... please wait')
-        self.ws_request('Page.navigate', {'url': URL})
+        self.ws_request("Network.enable")
+        self.ws_request("Page.enable")
+        show_msg("Opening login webpage... please wait")
+        self.ws_request("Page.navigate", {"url": URL})
 
-        self.ws_wait_event('Page.domContentEventFired')  # Wait loading DOM (document.onDOMContentLoaded event)
+        self.ws_wait_event(
+            "Page.domContentEventFired"
+        )  # Wait loading DOM (document.onDOMContentLoaded event)
 
-        show_msg('Please login in to website now ...waiting for you to finish...', TextFormat.COL_LIGHT_BLUE)
+        show_msg(
+            "Please login in to website now ...waiting for you to finish...",
+            TextFormat.COL_LIGHT_BLUE,
+        )
         if not self.wait_user_logged():
-            raise Warning('You have exceeded the time available for the login. Restart the operations.')
+            raise Warning(
+                "You have exceeded the time available for the login. Restart the operations."
+            )
 
-        self.ws_wait_event('Page.domContentEventFired')  # Wait loading DOM (document.onDOMContentLoaded event)
+        self.ws_wait_event(
+            "Page.domContentEventFired"
+        )  # Wait loading DOM (document.onDOMContentLoaded event)
 
         # Verify that falcorCache data exist, this data exist only when logged
-        show_msg('Verification of data in progress... please wait')
-        html_page = self.ws_request('Runtime.evaluate', {'expression': 'document.documentElement.outerHTML'})['result']['value']
-        react_context = extract_json(html_page, 'reactContext')
+        show_msg("Verification of data in progress... please wait")
+        html_page = self.ws_request(
+            "Runtime.evaluate", {"expression": "document.documentElement.outerHTML"}
+        )["result"]["value"]
+        react_context = extract_json(html_page, "reactContext")
         if react_context is None:
             # An error is happened in the reactContext extraction? try go on
-            show_msg('Error failed to check account membership status, try a simple check', TextFormat.COL_LIGHT_RED)
-            if 'falcorCache' not in html_page:
-                raise Warning('Error unable to find falcorCache data.')
+            show_msg(
+                "Error failed to check account membership status, try a simple check",
+                TextFormat.COL_LIGHT_RED,
+            )
+            if "falcorCache" not in html_page:
+                raise Warning("Error unable to find falcorCache data.")
         else:
             # Check the membership status
-            membership_status = react_context['models']['userInfo']['data']['membershipStatus']
-            if membership_status != 'CURRENT_MEMBER':
-                show_msg('The account membership status is: ' + membership_status, TextFormat.COL_LIGHT_RED)
-                raise Warning('Your login can not be used. The possible causes are account not confirmed/renewed/reactivacted.')
+            membership_status = react_context["models"]["userInfo"]["data"][
+                "membershipStatus"
+            ]
+            if membership_status != "CURRENT_MEMBER":
+                show_msg(
+                    "The account membership status is: " + membership_status,
+                    TextFormat.COL_LIGHT_RED,
+                )
+                raise Warning(
+                    "Your login can not be used. The possible causes are account not confirmed/renewed/reactivacted."
+                )
 
-        self.ws_wait_event('Page.loadEventFired')  # Wait loading page (window.onload event)
+        self.ws_wait_event(
+            "Page.loadEventFired"
+        )  # Wait loading page (window.onload event)
 
-        show_msg('File creation in progress... please wait')
+        show_msg("File creation in progress... please wait")
         # Get all cookies
-        cookies = self.ws_request('Network.getAllCookies').get('cookies', [])
+        cookies = self.ws_request("Network.getAllCookies").get("cookies", [])
         assert_cookies(cookies)
         # Generate a random PIN for access to "NFAuthentication.key" file
         pin = random.randint(1000, 9999)
         # Create file data structure
         data = {
-            'app_name': 'NFAuthenticationKey',
-            'app_version': self.app_version,
-            'app_system': 'MacOS' if IS_MACOS else 'Linux',
-            'app_author': 'CastagnaIT',
-            'timestamp': int(((datetime.utcnow() + timedelta(days=5)) - datetime(year=1970, month=1, day=1)).total_seconds()),
-            'data': {
-                'cookies': cookies
-            }
+            "app_name": "NFAuthenticationKey",
+            "app_version": self.app_version,
+            "app_system": "MacOS" if IS_MACOS else "Linux",
+            "app_author": "CastagnaIT",
+            "timestamp": int(
+                (
+                    (datetime.utcnow() + timedelta(days=5))
+                    - datetime(year=1970, month=1, day=1)
+                ).total_seconds()
+            ),
+            "data": {"cookies": cookies},
         }
         # Save the "NFAuthentication.key" file
         save_data(data, pin)
         # Close the browser
-        self.ws_request('Browser.close')
-        show_msg('Operations completed!\r\nThe "NFAuthentication.key" file has been saved in current folder.\r\nYour PIN protection is: {}'.format(pin),
-                 TextFormat.COL_BLUE)
+        self.ws_request("Browser.close")
+        show_msg(
+            'Operations completed!\r\nThe "NFAuthentication.key" file has been saved in current folder.\r\nYour PIN protection is: {}'.format(
+                pin
+            ),
+            TextFormat.COL_BLUE,
+        )
 
     def get_browser_debug_endpoint(self):
         start_time = time.time()
         while time.time() - start_time < 15:
             try:
-                endpoint = ''
-                data = urlopen('http://{0}:{1}/json'.format(LOCALHOST_ADDRESS, DEBUG_PORT), timeout=1).read().decode('utf-8')
+                endpoint = ""
+                data = (
+                    urlopen(
+                        "http://{0}:{1}/json".format(LOCALHOST_ADDRESS, DEBUG_PORT),
+                        timeout=1,
+                    )
+                    .read()
+                    .decode("utf-8")
+                )
                 if not data:
                     raise ValueError
                 session_list = json.loads(data)
                 for item in session_list:
-                    if item['type'] == 'page':
-                        endpoint = item['webSocketDebuggerUrl']
+                    if item["type"] == "page":
+                        endpoint = item["webSocketDebuggerUrl"]
                 if not endpoint:
-                    raise Warning('Chrome session page not found')
+                    raise Warning("Chrome session page not found")
                 self._ws = websocket.create_connection(endpoint)
                 return
-            except (URLError, socket.timeout, ValueError):  # json.JSONDecodeError inherited ValueError and available from >= py3.5
+            except (
+                URLError,
+                socket.timeout,
+                ValueError,
+            ):  # json.JSONDecodeError inherited ValueError and available from >= py3.5
                 pass
-        raise Warning('Unable to connect with the browser')
+        raise Warning("Unable to connect with the browser")
 
     def wait_user_logged(self):
         start_time = time.time()
         while time.time() - start_time < 300:  # 5 min
-            history_data = self.ws_request('Page.getNavigationHistory')
-            history_index = history_data['currentIndex']
+            history_data = self.ws_request("Page.getNavigationHistory")
+            history_index = history_data["currentIndex"]
             # If the current page url is like "https://www.n*****x.com/browse" means that the user should have logged in successfully
-            if '/browse' in history_data['entries'][history_index]['url']:
+            if "/browse" in history_data["entries"][history_index]["url"]:
                 return True
         return False
 
@@ -178,7 +230,7 @@ class Main(object):
 
     def ws_request(self, method, params=None):
         req_id = self.msg_id
-        message = json.dumps({'id': req_id, 'method': method, 'params': params or {}})
+        message = json.dumps({"id": req_id, "method": method, "params": params or {}})
         self._ws.send(message)
         start_time = time.time()
         while True:
@@ -186,9 +238,9 @@ class Main(object):
                 break
             message = self._ws.recv()
             parsed_message = json.loads(message)
-            if 'result' in parsed_message and parsed_message['id'] == req_id:
-                return parsed_message['result']
-        raise Warning('No data received from browser')
+            if "result" in parsed_message and parsed_message["id"] == req_id:
+                return parsed_message["result"]
+        raise Warning("No data received from browser")
 
     def ws_wait_event(self, method):
         start_time = time.time()
@@ -197,93 +249,125 @@ class Main(object):
                 break
             message = self._ws.recv()
             parsed_message = json.loads(message)
-            if 'method' in parsed_message and parsed_message['method'] == method:
+            if "method" in parsed_message and parsed_message["method"] == method:
                 return parsed_message
-        raise Warning('No event data received from browser')
+        raise Warning("No event data received from browser")
 
 
 # Helper methods
 class TextFormat:
     """Terminal color codes"""
-    COL_BLUE = '\033[94m'
-    COL_GREEN = '\033[92m'
-    COL_LIGHT_YELLOW = '\033[93m'
-    COL_LIGHT_RED = '\033[91m'
-    COL_LIGHT_BLUE = '\033[94m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-    END = '\033[0m'
+
+    COL_BLUE = "\033[94m"
+    COL_GREEN = "\033[92m"
+    COL_LIGHT_YELLOW = "\033[93m"
+    COL_LIGHT_RED = "\033[91m"
+    COL_LIGHT_BLUE = "\033[94m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
+    END = "\033[0m"
 
 
 def open_browser(browser_temp_path):
-    params = ['--incognito',
-              '--user-data-dir={}'.format(browser_temp_path),
-              '--remote-debugging-port={}'.format(DEBUG_PORT),
-              '--remote-allow-origins=*',
-              '--no-first-run',
-              '--no-default-browser-check']
-    dev_null = open(os.devnull, 'wb')
+    params = [
+        "--incognito",
+        "--user-data-dir={}".format(browser_temp_path),
+        "--remote-debugging-port={}".format(DEBUG_PORT),
+        "--remote-allow-origins=*",
+        "--no-first-run",
+        "--no-default-browser-check",
+    ]
+    dev_null = open(os.devnull, "wb")
     try:
         browser_path = get_browser_path()
-        show_msg('Browser startup... ({}) please wait'.format(browser_path))
-        return subprocess.Popen([browser_path] + params, stdout=dev_null, stderr=subprocess.STDOUT)
+        show_msg("Browser startup... ({}) please wait".format(browser_path))
+        return subprocess.Popen(
+            [browser_path] + params, stdout=dev_null, stderr=subprocess.STDOUT
+        )
     finally:
         dev_null.close()
 
 
 def get_browser_path():
     """Check and return the name of the installed browser"""
-    if '*' not in BROWSER_PATH:
+    if "*" not in BROWSER_PATH:
         return BROWSER_PATH
     if IS_MACOS:
-        for browser_name in ['Google Chrome', 'Chromium', 'Brave Browser']:
-            path = '/Applications/' + browser_name + '.app/Contents/MacOS/' + browser_name
+        for browser_name in ["Google Chrome", "Chromium", "Brave Browser"]:
+            path = (
+                "/Applications/" + browser_name + ".app/Contents/MacOS/" + browser_name
+            )
             if os.path.exists(path):
                 return path
     else:
-        for browser_name in ['google-chrome', 'google-chrome-stable', 'google-chrome-unstable', 'chromium', 'chromium-browser', 'brave-browser']:
+        for browser_name in [
+            "google-chrome",
+            "google-chrome-stable",
+            "google-chrome-unstable",
+            "chromium",
+            "chromium-browser",
+            "brave-browser",
+        ]:
             try:
-                path = subprocess.check_output(['which', browser_name]).decode('utf-8').strip()
+                path = (
+                    subprocess.check_output(["which", browser_name])
+                    .decode("utf-8")
+                    .strip()
+                )
                 if path:
                     return path
             except subprocess.CalledProcessError:
                 pass
-    raise Warning('Browser not detected.\r\nTry check if it is installed or specify the path in the BROWSER_PATH field inside "NFAuthenticationKey.py" file')
+    raise Warning(
+        'Browser not detected.\r\nTry check if it is installed or specify the path in the BROWSER_PATH field inside "NFAuthenticationKey.py" file'
+    )
 
 
 def assert_cookies(cookies):
     if not cookies:
-        raise Warning('Not found cookies')
-    login_cookies = ['nfvdid', 'SecureNetflixId', 'NetflixId']
+        raise Warning("Not found cookies")
+    login_cookies = ["nfvdid", "SecureNetflixId", "NetflixId"]
     for cookie_name in login_cookies:
-        if not any(cookie['name'] == cookie_name for cookie in cookies):
-            raise Warning('Not found cookies')
+        if not any(cookie["name"] == cookie_name for cookie in cookies):
+            raise Warning("Not found cookies")
 
 
 def extract_json(content, var_name):
     try:
-        pattern = r'netflix\.{}\s*=\s*(.*?);\s*</script>'
+        pattern = r"netflix\.{}\s*=\s*(.*?);\s*</script>"
         json_array = re.findall(pattern.format(var_name), content, re.DOTALL)
         json_str = json_array[0]
-        json_str_replace = json_str.replace(r'\"', r'\\"')  # Escape \"
-        json_str_replace = json_str_replace.replace(r'\s', r'\\s')  # Escape whitespace
-        json_str_replace = json_str_replace.replace(r'\r', r'\\r')  # Escape return
-        json_str_replace = json_str_replace.replace(r'\n', r'\\n')  # Escape line feed
-        json_str_replace = json_str_replace.replace(r'\t', r'\\t')  # Escape tab
-        json_str_replace = json_str_replace.replace(r'\p', r'/p')  # Unicode property not supported, we change slash to avoid unescape it
-        json_str_replace = json_str_replace.encode().decode('unicode_escape')  # Decode the string as unicode
-        json_str_replace = re.sub(r'\\(?!["])', r'\\\\', json_str_replace)  # Escape backslash (only when is not followed by double quotation marks \")
+        json_str_replace = json_str.replace(r"\"", r'\\"')  # Escape \"
+        json_str_replace = json_str_replace.replace(r"\s", r"\\s")  # Escape whitespace
+        json_str_replace = json_str_replace.replace(r"\r", r"\\r")  # Escape return
+        json_str_replace = json_str_replace.replace(r"\n", r"\\n")  # Escape line feed
+        json_str_replace = json_str_replace.replace(r"\t", r"\\t")  # Escape tab
+        json_str_replace = json_str_replace.replace(
+            r"\p", r"/p"
+        )  # Unicode property not supported, we change slash to avoid unescape it
+        json_str_replace = json_str_replace.encode().decode(
+            "unicode_escape"
+        )  # Decode the string as unicode
+        json_str_replace = re.sub(
+            r'\\(?!["])', r"\\\\", json_str_replace
+        )  # Escape backslash (only when is not followed by double quotation marks \")
         return json.loads(json_str_replace)
     except Exception as exc:
         return None
 
 
 def save_data(data, pin):
-    raw = bytes(Padding.pad(data_to_pad=json.dumps(data).encode('utf-8'), block_size=16))
-    iv = '\x00' * 16
-    cipher = AES.new((str(pin) + str(pin) + str(pin) + str(pin)).encode('utf-8'), AES.MODE_CBC, iv.encode('utf-8'))
-    encrypted_data = base64.b64encode(cipher.encrypt(raw)).decode('utf-8')
-    file = open('NFAuthentication.key', 'w')
+    raw = bytes(
+        Padding.pad(data_to_pad=json.dumps(data).encode("utf-8"), block_size=16)
+    )
+    iv = "\x00" * 16
+    cipher = AES.new(
+        (str(pin) + str(pin) + str(pin) + str(pin)).encode("utf-8"),
+        AES.MODE_CBC,
+        iv.encode("utf-8"),
+    )
+    encrypted_data = base64.b64encode(cipher.encrypt(raw)).decode("utf-8")
+    file = open("NFAuthentication.key", "w")
     file.write(encrypted_data)
     file.close()
 
@@ -303,12 +387,12 @@ def input_msg(text, text_format=None):
         return input(text)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     temp_path = tempfile.mkdtemp()
     try:
         Main(temp_path)
     except KeyboardInterrupt:
-        show_msg('\r\nOperations cancelled')
+        show_msg("\r\nOperations cancelled")
     finally:
         try:
             shutil.rmtree(temp_path)
