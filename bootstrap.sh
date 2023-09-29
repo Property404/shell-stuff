@@ -276,14 +276,17 @@ $USAGE
 
 Help:
     -p, --profile Choose which profile to use
+    --packages    Extra packages to install
     --skip-update Skip updating system packages
     -h, --help	  Display this message"
 
     local profile=""
     local skip_update=""
+    local extra_packages=""
     while true; do
         case "${1}" in
             -p | --profile ) profile="${2}"; shift 2 ;;
+            --packages ) extra_packages="${2}"; shift 2 ;;
             --skip-update ) skip_update=1; shift 1 ;;
             -h | --help ) echo "$HELP"; return 0 ;;
             -- ) shift; break ;;
@@ -302,6 +305,7 @@ Help:
     fi
     log "Using profile '${profile}'"
     source "./profiles/${profile}"
+    add_pkgs all "${extra_packages}"
 
     if [[ -n "${FEAT_LAX}" || -n "${FEAT_RUST_DEV}" || -n "${FEAT_NOTES}" ]]; then
         FEAT_RUST=1
