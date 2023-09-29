@@ -59,9 +59,9 @@ install_system_dependencies() {
     local -r skip_update="${1}"
 
     add_pkgs all "git tmux moreutils vim make ripgrep curl"
-    add_pkgs linux "trash-cli file nodejs pkg-config"
+    add_pkgs linux "file pkg-config"
     add_pkgs dnf "diffutils"
-    add_pkgs macos "gnu-sed node"
+    add_pkgs macos "gnu-sed"
     if [[ -n "${FEAT_NVIM}" ]]; then
         add_pkgs all "nvim"
     fi
