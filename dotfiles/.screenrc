@@ -1,0 +1,5 @@
+# Use ctrl-J to manage Screen
+escape ^Jj
+
+# Don't show intro message
+startup_message off
