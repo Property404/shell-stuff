@@ -165,7 +165,8 @@ install_dotfiles() {
     pushd dotfiles
     local -a files=(\
     ".bashrc" ".vimrc" ".tmux.conf" ".gitconfig" ".gitexclude"\
-    .local/bin/* ".bash_completion" ".config/nvim/init.vim" )
+    .local/bin/* ".bash_completion" ".config/nvim/init.vim"\
+    ".screenrc" )
     for file in "${files[@]}"; do
         home_file="${HOME}/${file}"
         if [[ ! -e "$home_file" ]] || ! diff "$file" "$home_file" > /dev/null; then
@@ -278,7 +279,7 @@ Help:
     -p, --profile Choose which profile to use
     --packages    Extra packages to install
     --skip-update Skip updating system packages
-    -h, --help	  Display this message"
+    -h, --help    Display this message"
 
     local profile=""
     local skip_update=""
