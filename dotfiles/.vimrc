@@ -52,6 +52,7 @@ set shortmess-=S
 " Indents
 filetype plugin indent on
 set autoindent
+set expandtab
 set ts=4 sw=4
 
 " Wrapping
