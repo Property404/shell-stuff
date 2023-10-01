@@ -129,7 +129,7 @@ install_dagan_utils() {
         log "Installing dagan-utils"
         local -r tempdir="$(mktemp -d)"
         pushd "${tempdir}"
-        git clone https://github.com/Property404/dagan-utils
+        git clone --depth=1 https://github.com/Property404/dagan-utils
         pushd dagan-utils
         make install
         popd
