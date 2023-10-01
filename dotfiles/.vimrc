@@ -8,7 +8,6 @@ Plug 'plasticboy/vim-markdown'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'mattn/emmet-vim'
 Plug 'rust-lang/rust.vim'
-Plug 'zntfdr/Christmas'
 if has('nvim')
     Plug 'f-person/auto-dark-mode.nvim'
 endif
@@ -16,9 +15,6 @@ call plug#end()
 
 let g:vim_markdown_folding_disabled = 1
 let g:coc_start_at_startup = v:false
-
-" Enable this during Christmas time
-" color Christmas
 
 if has('nvim')
     " Auto dark/light mode switching
