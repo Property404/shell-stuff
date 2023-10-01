@@ -269,6 +269,33 @@ generate_ssh_keys() {
     fi
 }
 
+# Verify system was set up correctly
+verify() {
+    log "Verifying"
+
+    # Test bashrc
+    bash ~/.bashrc
+
+    # bashrc relies on unbound variables, so reenable them
+    set +ue
+    source ~/.bashrc
+    set -ue
+
+    # Make sure vim doesn't error
+    vim +qall
+    if [[ -n "${FEAT_NVIM}" ]]; then
+        nvim +qall
+    fi
+
+    # Make sure Dagan Utils was installed
+    command -v peval > /dev/null
+    command -v fswap > /dev/null
+
+    # And basic packages
+    command -v git > /dev/null
+    command -v sponge > /dev/null
+}
+
 main() {
     local -r USAGE="Usage: $(basename "${0}") [-h] --profile <profile>"
     local -r HELP="Set up a system for the first time
@@ -343,6 +370,7 @@ Help:
         log "Running post-bootstrap configuration"
         post_bootstrap
     fi
+    verify
     log "System has been set up!"
 }
 
