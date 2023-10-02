@@ -1,4 +1,6 @@
-# Debian 11 because that's what ephemerals at work use
+# Debian 11 because:
+#   It's used on the ephemerals at work
+#   It's the base of the current latest RPI OS
 FROM debian:11
 
 # This should help cache
@@ -15,5 +17,5 @@ RUN apt-get install -y sudo
 COPY . /workdir
 WORKDIR /workdir
 
-RUN ./bootstrap.sh --profile dev
+RUN ./bootstrap.sh --profile dev --skip-update
 CMD bash -l
