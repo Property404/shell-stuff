@@ -75,8 +75,7 @@ install_system_dependencies() {
         add_pkgs apt "ssh"
     fi
     if [[ -n "$RUBY_PACKAGES" ]]; then
-        add_pkgs linux "gem"
-        add_pkgs macos "ruby"
+        add_pkgs all "ruby"
     fi
 
     local update;
@@ -119,8 +118,12 @@ install_system_dependencies() {
 install_ruby_packages() {
     if [[ -n "$RUBY_PACKAGES" ]]; then
         log "Installing gems: $RUBY_PACKAGES"
-        #shellcheck disable=2086
-        gem install --user-install ${RUBY_PACKAGES}
+        local command="gem install "
+        if [[ "$(uname)" == "Darwin" ]]; then
+            command+="--user-install "
+        fi
+        command+="${RUBY_PACKAGES}"
+        bash -c "${command}"
     fi
 }
 
