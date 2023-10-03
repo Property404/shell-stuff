@@ -2,7 +2,7 @@
 # Profile for home laptop/desktop
 source ./profiles/workstation
 
-if ! cat /etc/os-release | grep 'ID=fedora' > /dev/null; then
+if ! grep 'ID=fedora' /etc/os-release > /dev/null; then
     error "This profile expects fedora"
 fi
 
