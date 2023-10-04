@@ -6,4 +6,4 @@ FEAT_GUI=1
 FEAT_LAX=1
 
 # Replaces `rm` with trash-put via .bashrc
-add_pkgs linux "trash-cli"
+add_pkgs --linux "trash-cli"

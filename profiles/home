@@ -6,18 +6,18 @@ if ! grep 'ID=fedora' /etc/os-release > /dev/null; then
     error "This profile expects fedora"
 fi
 
-add_pkgs linux "flatpak"
+add_pkgs --linux "flatpak"
 # Silly stuff
-add_pkgs dnf "fortune-mod"
-add_pkgs all "cowsay"
+add_pkgs --dnf "fortune-mod"
+add_pkgs "cowsay"
 # RPM fusion free
-add_pkgs dnf "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
+add_pkgs --dnf "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
 
 # RPM FUSION PACKAGES (uses `LATE_PACKAGES`)
 # For playing videos
-LATE_PACKAGES+=" gstreamer1-plugin-openh264 gstreamer1-libav --exclude=gstreamer1-plugins-bad-free-devel lame "
+add_pkgs --late --dnf "gstreamer1-plugin-openh264 gstreamer1-libav --exclude=gstreamer1-plugins-bad-free-devel lame"
 # Some apps
-LATE_PACKAGES+=" pithos vlc "
+add_pkgs --late --dnf "pithos vlc"
 
 post_bootstrap() {
     # Install Signal

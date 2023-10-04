@@ -17,28 +17,44 @@ log() {
 }
 
 add_pkgs() {
-    local -r systype="$1"
-    if [[ "${systype}" == "macos" ]]; then
-        if [[ "$(uname)" != "Darwin" ]]; then
-            return 0
-        fi
-    elif [[ "${systype}" == "linux" ]]; then
-        if [[ "$(uname)" != "Linux" ]]; then
-            return 0
-        fi
-    elif [[ "${systype}" == "dnf" ]]; then
-        if ! command -v dnf > /dev/null; then
-            return 0
-        fi
-    elif [[ "${systype}" == "apt" ]]; then
-        if ! command -v apt-get > /dev/null; then
-            return 0
-        fi
-    elif [[ "${systype}" != "all" ]] ; then
-        error "Unknown system type: ${systype}"
+    local late=;
+    local ruby=;
+    local macos=;
+    local linux=;
+    local apt=;
+    local dnf=;
+    local check_system=;
+    while true; do
+        case "${1}" in
+            --late ) late=1; shift 1 ;;
+            --ruby ) ruby=1; shift 1 ;;
+            --macos ) macos=1; check_system=1; shift 1 ;;
+            --linux ) linux=1; check_system=1 ; shift 1 ;;
+            --dnf ) dnf=1; check_system=1; shift 1 ;;
+            --apt ) apt=1; check_system=1; shift 1 ;;
+            -- ) shift; break ;;
+            -* ) error "Unrecognized option: $1\n$USAGE" ;;
+            * ) break ;;
+        esac
+    done
+
+    if [[ -z "${check_system}" ]] ||
+    [[ -n "${macos}" && "$(uname)" == "Darwin" ]] ||
+    [[ -n "${linux}" && "$(uname)" == "Linux" ]] ||
+    [[ -n "${apt}" && "$(command -v apt 2> /dev/null)" ]] ||
+    [[ -n "${dnf}" && "$(command -v dnf 2> /dev/null)" ]] ; then
+        true
+    else
+        return 0
     fi
-    shift 1
-    PACKAGES+=" ${*} "
+
+    if [[ -n "${late}" ]]; then
+        LATE_PACKAGES+=" ${*} "
+    elif [[ -n "${ruby}" ]]; then
+        RUBY_PACKAGES+=" ${*} "
+    else
+        PACKAGES+=" ${*} "
+    fi
 }
 
 backup_file() {
@@ -58,24 +74,24 @@ install_system_dependencies() {
     log "Installing system dependencies"
     local -r skip_update="${1}"
 
-    add_pkgs all "git tmux moreutils vim make ripgrep curl"
-    add_pkgs linux "file pkg-config"
-    add_pkgs dnf "diffutils"
-    add_pkgs macos "gnu-sed"
+    add_pkgs "git tmux moreutils vim make ripgrep curl"
+    add_pkgs --linux "file pkg-config"
+    add_pkgs --dnf "diffutils"
+    add_pkgs --macos "gnu-sed"
     if [[ -n "${FEAT_NVIM}" ]]; then
-        add_pkgs all "nvim"
+        add_pkgs "nvim"
     fi
     if [[ -n "${FEAT_RUST_DEV}" ]]; then
-        add_pkgs all "gcc"
-        add_pkgs dnf "openssl-devel"
-        add_pkgs apt "libssl-dev"
+        add_pkgs "gcc"
+        add_pkgs --dnf "openssl-devel"
+        add_pkgs --apt "libssl-dev"
     fi
     if [[ -n "${FEAT_GENERATE_KEYS}" ]]; then
-        add_pkgs dnf "openssh"
-        add_pkgs apt "ssh"
+        add_pkgs --dnf "openssh"
+        add_pkgs --apt "ssh"
     fi
     if [[ -n "$RUBY_PACKAGES" ]]; then
-        add_pkgs all "ruby"
+        add_pkgs "ruby"
     fi
 
     local update;
@@ -204,12 +220,12 @@ add_gui_packages() {
         log "DE: Aqua"
         # Nothing to do
     elif [[ "$(uname)" == "Linux" ]]; then
-        add_pkgs dnf "gvim"
-        add_pkgs apt "vim-gtk3"
+        add_pkgs --dnf "gvim"
+        add_pkgs --apt "vim-gtk3"
 
         if [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
             log "DE: Gnome"
-            add_pkgs linux "gnome-tweaks"
+            add_pkgs --linux "gnome-tweaks"
         elif [[ "${XDG_CURRENT_DESKTOP}" == "KDE" ]]; then
             log "DE: KDE"
             # Nothing to do
@@ -218,9 +234,9 @@ add_gui_packages() {
         fi
 
         if [[ "${XDG_SESSION_TYPE}" == "x11" ]]; then
-            add_pkgs linux "xsel"
+            add_pkgs --linux "xsel"
         elif [[ "${XDG_SESSION_TYPE}" == "wayland" ]]; then
-            add_pkgs linux "wl-clipboard"
+            add_pkgs --linux "wl-clipboard"
         else
             error "Could not determine session type"
         fi
@@ -335,7 +351,7 @@ Help:
     fi
     log "Using profile '${profile}'"
     source "./profiles/${profile}"
-    add_pkgs all "${extra_packages}"
+    add_pkgs "${extra_packages}"
 
     if [[ -n "${FEAT_LAX}" || -n "${FEAT_RUST_DEV}" || -n "${FEAT_NOTES}" ]]; then
         FEAT_RUST=1

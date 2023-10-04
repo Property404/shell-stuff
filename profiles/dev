@@ -6,9 +6,9 @@ FEAT_GENERATE_KEYS=1
 FEAT_LAX=1
 
 # Linting programs
-add_pkgs all "shellcheck black pylint yamllint"
-RUBY_PACKAGES+=" mdl "
+add_pkgs "shellcheck black pylint yamllint"
+add_pkgs --ruby "mdl"
 
 # Allows coc to work (.vimrc)
-add_pkgs linux "nodejs"
-add_pkgs macos "node"
+add_pkgs --linux "nodejs"
+add_pkgs --macos "node"
