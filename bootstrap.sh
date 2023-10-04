@@ -203,7 +203,7 @@ install_vim_plug() {
     curl --tlsv1.2 -fLo ~/.vim/autoload/plug.vim --create-dirs \
         https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     # Vim will complain about plugins not found, so pipe `yes`
-    yes | vim +PlugInstall +qall > /dev/null
+    yes | vim +PlugInstall +qall &> /dev/null
 }
 
 install_notes() {
