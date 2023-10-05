@@ -149,7 +149,11 @@ install_dagan_utils() {
         pushd "${tempdir}"
         git clone --depth=1 https://github.com/Property404/dagan-utils
         pushd dagan-utils
-        make install
+        if [[ -n "$FEAT_DAGAN_UTILS_FULL" ]]; then
+            make install
+        else
+            make mininstall
+        fi
         popd
         rm -rf dagan-utils
         popd

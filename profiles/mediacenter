@@ -4,6 +4,7 @@ source ./profiles/min
 
 FEAT_GUI=1
 FEAT_GENERATE_KEYS=1
+FEAT_DAGAN_UTILS_FULL=1
 
 if [[ "$(uname)" != "Linux" ]]; then
     error "This profile expects linux"

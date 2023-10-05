@@ -4,6 +4,7 @@ source ./profiles/min
 FEAT_RUST_DEV=1
 FEAT_GENERATE_KEYS=1
 FEAT_LAX=1
+FEAT_DAGAN_UTILS_FULL=1
 
 # Linting programs
 add_pkgs "shellcheck black pylint yamllint"
