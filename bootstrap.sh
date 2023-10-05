@@ -41,7 +41,7 @@ add_pkgs() {
     if [[ -z "${check_system}" ]] ||
     [[ -n "${macos}" && "$(uname)" == "Darwin" ]] ||
     [[ -n "${linux}" && "$(uname)" == "Linux" ]] ||
-    [[ -n "${apt}" && "$(command -v apt 2> /dev/null)" ]] ||
+    [[ -n "${apt}" && "$(command -v apt-get 2> /dev/null)" ]] ||
     [[ -n "${dnf}" && "$(command -v dnf 2> /dev/null)" ]] ; then
         true
     else
