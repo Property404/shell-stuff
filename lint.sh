@@ -35,7 +35,6 @@ main() {
 
 	# Locate all files that need to be linted
     while read -r f; do
-        echo "$f"
 		# Python files
 		if head -n 1 "$f" | grep -q 'python'; then
 			python_files+=("$f")

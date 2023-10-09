@@ -1,14 +1,14 @@
 # vim: syntax=bash
 # Minimum set up
 # All other profiles should inherit from this
-PACKAGES=
-LATE_PACKAGES=
-RUBY_PACKAGES=
-FEAT_NVIM=
-FEAT_RUST=
-FEAT_RUST_DEV=
-FEAT_LAX=
-FEAT_GUI=
-FEAT_NOTES=
-FEAT_GENERATE_KEYS=
-FEAT_DAGAN_UTILS_FULL=
+export PACKAGES=
+export LATE_PACKAGES=
+export RUBY_PACKAGES=
+export FEAT_NVIM=
+export FEAT_RUST=
+export FEAT_RUST_DEV=
+export FEAT_LAX=
+export FEAT_GUI=
+export FEAT_NOTES=
+export FEAT_GENERATE_KEYS=
+export FEAT_DAGAN_UTILS_FULL=
