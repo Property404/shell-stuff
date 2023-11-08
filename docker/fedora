@@ -1,4 +1,4 @@
-FROM fedora:38
+FROM fedora:39
 
 # This should help cache
 RUN sudo dnf upgrade --refresh -y
