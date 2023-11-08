@@ -74,7 +74,7 @@ install_system_dependencies() {
     log "Installing system dependencies"
     local -r skip_update="${1}"
 
-    add_pkgs "git tmux moreutils vim make ripgrep curl"
+    add_pkgs "git tmux moreutils vim make ripgrep curl sudo"
     add_pkgs --linux "file pkg-config"
     add_pkgs --dnf "diffutils"
     add_pkgs --macos "gnu-sed"
@@ -96,7 +96,10 @@ install_system_dependencies() {
 
     local update;
     local install;
-    local use_sudo=1
+    local use_sudo=;
+    if [[ "$EUID" -ne 0 ]]; then
+        use_sudo=1
+    fi
     if command -v dnf > /dev/null; then
         update="dnf update --refresh -y"
         install="dnf install -y"

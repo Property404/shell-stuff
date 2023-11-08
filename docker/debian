@@ -11,9 +11,6 @@ RUN curl --tlsv1.3 https://sh.rustup.rs -sSf | sh -s -- -y
 RUN apt-get install -y pkg-config
 RUN ~/.cargo/bin/cargo install cargo-audit cargo-edit
 
-# Bootstrap actually relies on this:
-RUN apt-get install -y sudo
-
 COPY . /workdir
 WORKDIR /workdir
 
