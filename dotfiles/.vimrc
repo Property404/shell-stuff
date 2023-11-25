@@ -86,6 +86,8 @@ command W w
 command Q q
 command Qa qa
 command QA qa
+command Bn bn
+command BN bn
 
 " Disable EX mode
 :map Q <Nop>
