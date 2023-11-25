@@ -230,10 +230,10 @@ add_gui_packages() {
         add_pkgs --dnf "gvim"
         add_pkgs --apt "vim-gtk3"
 
-        if [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
+        if [[ "${XDG_SESSION_DESKTOP}" == "gnome" ]]; then
             log "DE: Gnome"
             add_pkgs --linux "gnome-tweaks"
-        elif [[ "${XDG_CURRENT_DESKTOP}" == "KDE" ]]; then
+        elif [[ "${XDG_SESSION_DESKTOP}" == "kde" ]]; then
             log "DE: KDE"
             # Nothing to do
         else
@@ -257,7 +257,7 @@ set_up_de() {
     if [[ "$(uname)" == "Darwin" ]]; then
         log "DE: Aqua"
         # Nothing to do
-    elif [[ "${XDG_CURRENT_DESKTOP}" == "GNOME" ]]; then
+    elif [[ "${XDG_SESSION_DESKTOP}" == "gnome" ]]; then
         log "DE: Gnome"
         # Dark mode
         gsettings set org.gnome.desktop.interface gtk-theme Adwaita-dark
@@ -268,7 +268,7 @@ set_up_de() {
         gsettings set org.gnome.desktop.privacy remove-old-temp-files true
         # Disable annoying sounds
         gsettings set org.gnome.desktop.sound event-sounds false
-    elif [[ "${XDG_CURRENT_DESKTOP}" == "KDE" ]]; then
+    elif [[ "${XDG_SESSION_DESKTOP}" == "kde" ]]; then
         log "DE: KDE"
         # Nothing to do
     else
