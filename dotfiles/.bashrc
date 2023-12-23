@@ -98,7 +98,6 @@ alias ls="maybelax ls --color=auto"
 
 # Because --color=always is a mouthful
 alias less="less -r"
-alias cargo="cargo --color=always"
 alias cgrep="grep --color=always"
 alias crg="rg --color=always"
 
