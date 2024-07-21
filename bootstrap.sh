@@ -74,7 +74,7 @@ install_system_dependencies() {
     log "Installing system dependencies"
     local -r skip_update="${1}"
 
-    add_pkgs "git tmux moreutils vim make ripgrep curl"
+    add_pkgs "git tmux moreutils vim make ripgrep curl htop"
     add_pkgs --linux "file pkg-config sudo"
     add_pkgs --dnf "diffutils"
     add_pkgs --macos "gnu-sed"
