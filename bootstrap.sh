@@ -216,7 +216,8 @@ install_vim_plug() {
 install_notes() {
     log "Installing Notes"
     if ! command -v notes > /dev/null; then
-        BASH_COMPLETIONS_DIR=~/.bash_completion.d\
+        mkdir -p ~/.bash_completion.d/
+        BASH_COMPLETIONS_DIR=~/.bash_completion.d \
             cargo install --git https://github.com/Property404/notes
     fi
 }
