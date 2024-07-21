@@ -1,0 +1,18 @@
+# vim: syntax=bash
+# Profile for work VMs
+source ./profiles/workstation
+
+add_pkgs --linux "bzip2 subversion"
+
+post_bootstrap() {
+    # Install CodeCollaborator
+    local -r installer="/tmp/dev.dagans.shell-stuff.bootstrap.ccollab_install.sh"
+    local -r integrity="47890bf1cc99984369399533d7d556ca94c78fcfaab39fe55ed0c2ba03d99cc1"
+    wget https://downloads.codecollaborator.com/14.6.14600/ccollab_client_14_6_14600_unix.sh -O "${installer}"
+    if [[ "$(sha256sum "${installer}" | cut -d' ' -f 1)" != "${integrity}" ]]; then
+        error "Checksum mismatch!"
+        return 1
+    else
+        sudo /"${installer}"
+    fi
+}
