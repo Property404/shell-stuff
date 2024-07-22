@@ -3,6 +3,7 @@
 source ./profiles/workstation
 
 add_pkgs --linux "bzip2 subversion"
+add_pkgs --apt "default-jre"
 
 post_bootstrap() {
     # Install CodeCollaborator
@@ -13,6 +14,6 @@ post_bootstrap() {
         error "Checksum mismatch!"
         return 1
     else
-        sudo /"${installer}"
+        bash /"${installer}"
     fi
 }
