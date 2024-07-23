@@ -2,7 +2,7 @@
 # Profile for work VMs
 source ./profiles/workstation
 
-add_pkgs --linux "bzip2 subversion"
+add_pkgs --linux "bzip2 subversion pv"
 add_pkgs --apt "default-jre"
 
 post_bootstrap() {
