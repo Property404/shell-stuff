@@ -8,7 +8,7 @@ Plug 'plasticboy/vim-markdown'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'mattn/emmet-vim'
 Plug 'rust-lang/rust.vim'
-Plug 'vim-scripts/a.vim'
+Plug 'Property404/a.vim'
 if has('nvim')
     Plug 'f-person/auto-dark-mode.nvim'
 endif
