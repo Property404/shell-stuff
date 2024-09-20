@@ -98,6 +98,11 @@ alias less="less -r"
 alias cgrep="grep --color=always"
 alias crg="rg --color=always"
 
+# Linux specific aliases
+if [[ "$(uname -s)" == "Linux" ]]; then
+    alias open="xdg-open"
+fi
+
 # Spelling mistakes
 alias sl="ls"
 alias gre="grep"
