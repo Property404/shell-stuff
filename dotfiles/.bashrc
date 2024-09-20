@@ -41,9 +41,6 @@ alias reboot='echo "Woah slow down there pardner...if you actually want to reboo
 alias l="ls --color=auto"
 alias la="ls --color=auto -A"
 
-# To help catch bad links
-alias ln="ln -w"
-
 # Danger: SSH without checking key
 alias unsafe_ssh="ssh -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/null'"
 alias unsafe_scp="scp -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/null'"
