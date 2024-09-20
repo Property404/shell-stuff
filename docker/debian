@@ -1,7 +1,4 @@
-# Debian 11 because:
-#   It's used on the ephemerals at work
-#   It's the base of the current latest RPI OS
-FROM debian:11
+FROM debian:12
 
 # This should help cache
 RUN apt-get update -y
