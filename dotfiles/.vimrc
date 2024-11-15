@@ -9,6 +9,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'mattn/emmet-vim'
 Plug 'rust-lang/rust.vim'
 Plug 'Property404/a.vim'
+Plug 'tpope/vim-surround'
 if has('nvim')
     Plug 'f-person/auto-dark-mode.nvim'
 endif
