@@ -191,7 +191,7 @@ install_dotfiles() {
     local -a files=(\
     ".bashrc" ".vimrc" ".tmux.conf" ".gitconfig" ".gitexclude"\
     .local/bin/* ".bash_completion" ".config/nvim/init.vim"\
-    ".screenrc" )
+    ".config/nvim/coc-settings.json" ".screenrc" )
     for file in "${files[@]}"; do
         home_file="${HOME}/${file}"
         if [[ ! -e "$home_file" ]] || ! diff "$file" "$home_file" > /dev/null; then
