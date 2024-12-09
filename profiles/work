@@ -10,12 +10,12 @@ add_pkgs --dnf "lmdb-devel mdbtools-devel"
 post_bootstrap() {
     # Install CodeCollaborator
     local -r installer="/tmp/dev.dagans.shell-stuff.bootstrap.ccollab_install.sh"
-    local -r integrity="47890bf1cc99984369399533d7d556ca94c78fcfaab39fe55ed0c2ba03d99cc1"
-    wget https://downloads.codecollaborator.com/14.6.14600/ccollab_client_14_6_14600_unix.sh -O "${installer}"
+    local -r integrity="55619a3cd8d7276f46eb495c19de9847d67d6ad8707f34b9c4124696a14629f7"
+    wget 'https://downloads.codecollaborator.com/14.3.14303/ccollab_client_14_3_14303_unix.sh'  -O "${installer}"
     if [[ "$(sha256sum "${installer}" | cut -d' ' -f 1)" != "${integrity}" ]]; then
         error "Checksum mismatch!"
         return 1
     else
-        bash /"${installer}"
+        INSTALL4J_ADD_VM_PARAMS=-Djava.security.manager=allow bash /"${installer}"
     fi
 }
