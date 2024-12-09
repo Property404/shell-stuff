@@ -16,6 +16,7 @@
     exec = "!exec "
     # Add to .gitexclude file
     exclude = "!f() { echo $1 >> \"$(git root)/.git/info/exclude\"; }; f"
+    blast = !git remote | xargs -L1 git push --all
 [core]
     excludesFile = ~/.gitexclude
 [init]
