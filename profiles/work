@@ -2,7 +2,7 @@
 # Profile for work VMs
 source ./profiles/workstation
 
-add_pkgs --linux "bzip2 subversion pv"
+add_pkgs --linux "bzip2 subversion pv colordiff"
 add_pkgs --apt "default-jre"
 # Needed to build
 add_pkgs --dnf "lmdb-devel mdbtools-devel"
