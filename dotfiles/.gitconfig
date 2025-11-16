@@ -21,3 +21,5 @@
     excludesFile = ~/.gitexclude
 [init]
     defaultBranch = main
+[push]
+	autoSetupRemote = true
