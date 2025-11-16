@@ -10,3 +10,6 @@ rusty-tags.vi
 
 # Intentional ignore
 *.ignore
+
+# SVN crap
+.svn

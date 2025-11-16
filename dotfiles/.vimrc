@@ -4,41 +4,19 @@ Plug 'lifepillar/vim-mucomplete'
 Plug 'gryf/wombat256grf'
 Plug 'preservim/tagbar'
 Plug 'dhruvasagar/vim-table-mode'
-Plug 'plasticboy/vim-markdown'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'tpope/vim-markdown'
 Plug 'mattn/emmet-vim'
 Plug 'rust-lang/rust.vim'
 Plug 'Property404/a.vim'
 Plug 'tpope/vim-surround'
 if has('nvim')
-    Plug 'f-person/auto-dark-mode.nvim'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 endif
 call plug#end()
 
 let g:vim_markdown_folding_disabled = 1
-let g:coc_start_at_startup = v:false
 
-if has('nvim')
-    " Auto dark/light mode switching
-    :lua <<EOF
-    local auto_dark_mode = require('auto-dark-mode')
-
-    auto_dark_mode.setup({
-        update_interval = 10000,
-        set_dark_mode = function()
-            vim.api.nvim_set_option('background', 'dark')
-            vim.cmd('colorscheme wombat256grf')
-        end,
-        set_light_mode = function()
-            vim.api.nvim_set_option('background', 'light')
-            vim.cmd('colorscheme morning')
-        end,
-    })
-    auto_dark_mode.init()
-EOF
-else
-    color wombat256grf
-endif
+color wombat256grf
 
 " Line numbers
 set relativenumber
@@ -96,3 +74,7 @@ command BN bn
 
 " Highlight Jenkinsfile
 au BufNewFile,BufRead Jenkinsfile setf groovy
+
+" Super scawy warning 😨 if I'm in /cmake/  directory because I'm so godddamn
+" sick of losing my work
+autocmd BufEnter * if expand('%:p') =~ '/cmake/.*source/' && (expand('%:p') =~ '\.c$\|\.cpp$\|\.h$\|\.hpp$') | highlight Normal ctermbg=DarkRed guibg=#8B0000 | endif
