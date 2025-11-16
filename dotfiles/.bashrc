@@ -41,6 +41,8 @@ alias reboot='echo "Woah slow down there pardner...if you actually want to reboo
 alias l="ls --color=auto"
 alias la="ls --color=auto -A"
 
+# So annoying that `--progress` isn't the default
+alias rsync="rsync --progress"
 # Danger: SSH without checking key
 alias unsafe_ssh="ssh -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/null'"
 alias unsafe_scp="scp -o 'StrictHostKeyChecking=no' -o 'UserKnownHostsFile=/dev/null'"
@@ -55,6 +57,11 @@ alias ....="cd ../../.."
 alias .....="cd ../../../.."
 alias ......="cd ../../../../.."
 alias .......="cd ../../../../../.."
+
+# Make a directroy and CD into it
+function mkcd {
+    mkdir "${1}" && cd "${1}"
+}
 
 function maybelax() {
     if command -v lax > /dev/null; then
